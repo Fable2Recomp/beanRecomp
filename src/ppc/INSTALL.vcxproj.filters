@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="17.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <CustomBuild Include="C:\Users\matt\Documents\BeanRecomp\beanRecomp\CMakeFiles\66985a0cda7d7c846a2dd553617bcb8a\INSTALL_force.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="CMake Rules">
+      <UniqueIdentifier>{114BA47F-B309-3CB9-B1B9-30433B3B7D42}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

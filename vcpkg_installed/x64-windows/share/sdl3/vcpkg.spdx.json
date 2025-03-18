@@ -1,0 +1,132 @@
+{
+  "$schema": "https://raw.githubusercontent.com/spdx/spdx-spec/v2.2.1/schemas/spdx-schema.json",
+  "spdxVersion": "SPDX-2.2",
+  "dataLicense": "CC0-1.0",
+  "SPDXID": "SPDXRef-DOCUMENT",
+  "documentNamespace": "https://spdx.org/spdxdocs/sdl3-x64-windows-3.2.8-d23b9575-0777-43bd-9ae4-b425b9cd3a0f",
+  "name": "sdl3:x64-windows@3.2.8 52b0cabded1df9d4c9417dfe351510f940f2c868c7870e7150844116293a8c44",
+  "creationInfo": {
+    "creators": [
+      "Tool: vcpkg-2025-02-11-bec4296bf5289dc9ce83b4f5095943e44162f9c2"
+    ],
+    "created": "2025-03-14T21:44:24Z"
+  },
+  "relationships": [
+    {
+      "spdxElementId": "SPDXRef-port",
+      "relationshipType": "GENERATES",
+      "relatedSpdxElement": "SPDXRef-binary"
+    },
+    {
+      "spdxElementId": "SPDXRef-port",
+      "relationshipType": "CONTAINS",
+      "relatedSpdxElement": "SPDXRef-file-0"
+    },
+    {
+      "spdxElementId": "SPDXRef-port",
+      "relationshipType": "CONTAINS",
+      "relatedSpdxElement": "SPDXRef-file-1"
+    },
+    {
+      "spdxElementId": "SPDXRef-port",
+      "relationshipType": "CONTAINS",
+      "relatedSpdxElement": "SPDXRef-file-2"
+    },
+    {
+      "spdxElementId": "SPDXRef-binary",
+      "relationshipType": "GENERATED_FROM",
+      "relatedSpdxElement": "SPDXRef-port"
+    },
+    {
+      "spdxElementId": "SPDXRef-file-0",
+      "relationshipType": "CONTAINED_BY",
+      "relatedSpdxElement": "SPDXRef-port"
+    },
+    {
+      "spdxElementId": "SPDXRef-file-1",
+      "relationshipType": "CONTAINED_BY",
+      "relatedSpdxElement": "SPDXRef-port"
+    },
+    {
+      "spdxElementId": "SPDXRef-file-2",
+      "relationshipType": "CONTAINED_BY",
+      "relatedSpdxElement": "SPDXRef-port"
+    }
+  ],
+  "packages": [
+    {
+      "name": "sdl3",
+      "SPDXID": "SPDXRef-port",
+      "versionInfo": "3.2.8",
+      "downloadLocation": "git+https://github.com/Microsoft/vcpkg@3086e1a7e371cb947c0f82087a61d8df3b4a15e3",
+      "homepage": "https://www.libsdl.org",
+      "licenseConcluded": "Zlib AND MIT AND Apache-2.0",
+      "licenseDeclared": "NOASSERTION",
+      "copyrightText": "NOASSERTION",
+      "description": "Simple DirectMedia Layer is a cross-platform development library designed to provide low level access to audio, keyboard, mouse, joystick, and graphics hardware via OpenGL and Direct3D.",
+      "comment": "This is the port (recipe) consumed by vcpkg."
+    },
+    {
+      "name": "sdl3:x64-windows",
+      "SPDXID": "SPDXRef-binary",
+      "versionInfo": "52b0cabded1df9d4c9417dfe351510f940f2c868c7870e7150844116293a8c44",
+      "downloadLocation": "NONE",
+      "licenseConcluded": "Zlib AND MIT AND Apache-2.0",
+      "licenseDeclared": "NOASSERTION",
+      "copyrightText": "NOASSERTION",
+      "comment": "This is a binary package built by vcpkg."
+    },
+    {
+      "SPDXID": "SPDXRef-resource-0",
+      "name": "libsdl-org/SDL",
+      "downloadLocation": "git+https://github.com/libsdl-org/SDL@release-3.2.8",
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "NOASSERTION",
+      "copyrightText": "NOASSERTION",
+      "checksums": [
+        {
+          "algorithm": "SHA512",
+          "checksumValue": "992834fd6903fa8e689d6a0c32bfb55e152aecaabc0f89b99d8d74a6cb92768ef4e0414302b91584f6cb0712d3a2b0a221aa1e0634c34b29eb5fa8f26d89a33f"
+        }
+      ]
+    }
+  ],
+  "files": [
+    {
+      "fileName": "./C:/Users/matt/Documents/BeanRecomp/beanRecomp/vcpkg/buildtrees/versioning_/versions/sdl3/3086e1a7e371cb947c0f82087a61d8df3b4a15e3/portfile.cmake",
+      "SPDXID": "SPDXRef-file-0",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "5ccfd7ec288479e858dfcd161fe3a9491210e288252b592a3505575a1b98a0e3"
+        }
+      ],
+      "licenseConcluded": "NOASSERTION",
+      "copyrightText": "NOASSERTION"
+    },
+    {
+      "fileName": "./C:/Users/matt/Documents/BeanRecomp/beanRecomp/vcpkg/buildtrees/versioning_/versions/sdl3/3086e1a7e371cb947c0f82087a61d8df3b4a15e3/usage",
+      "SPDXID": "SPDXRef-file-1",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "8ce24feae5e34974279849a684f59ec0ab04b93aef667ea5b53f9acff3ee48a8"
+        }
+      ],
+      "licenseConcluded": "NOASSERTION",
+      "copyrightText": "NOASSERTION"
+    },
+    {
+      "fileName": "./C:/Users/matt/Documents/BeanRecomp/beanRecomp/vcpkg/buildtrees/versioning_/versions/sdl3/3086e1a7e371cb947c0f82087a61d8df3b4a15e3/vcpkg.json",
+      "SPDXID": "SPDXRef-file-2",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "e475999d3caf3542d0344ac0c32839811a3063480bd32a045fe475d4e968e311"
+        }
+      ],
+      "licenseConcluded": "NOASSERTION",
+      "copyrightText": "NOASSERTION"
+    }
+  ]
+}

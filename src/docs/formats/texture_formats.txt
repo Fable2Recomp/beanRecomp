@@ -1,0 +1,108 @@
+# Texture Formats Found in Xbox 360 Game Data
+
+## DXT Formats
+- FMT_DXT1
+- FMT_DXT2_3
+- FMT_DXT3A
+- FMT_DXT5A
+- FMT_DXT1_AS_16_16_16_16
+- FMT_DXT2_3_AS_16_16_16_16
+- FMT_DXT4_5_AS_16_16_16_16
+- FMT_DXN
+- FMT_DXV
+
+## Float Formats
+- FMT_32_FLOAT
+- FMT_32_32_FLOAT
+- FMT_32_32_32_FLOAT
+- FMT_32_32_32_32_FLOAT
+- FMT_16_FLOAT
+- FMT_16_16_FLOAT
+- FMT_16_16_16_16_FLOAT
+- FMT_24_8_FLOAT
+
+## Integer Formats
+- FMT_32
+- FMT_32_32
+- FMT_32_32_32_32
+- FMT_16
+- FMT_16_16
+- FMT_16_16_16_16
+- FMT_16_EXPAND
+- FMT_16_16_EXPAND
+- FMT_16_16_16_16_EXPAND
+- FMT_8
+- FMT_8_8
+- FMT_8_8_8_8
+- FMT_8_A
+- FMT_8_B
+- FMT_8_8_8_8_A
+- FMT_4_4_4_4
+- FMT_4_5
+- FMT_5_6_5
+- FMT_6_5_5
+- FMT_1_5_5_5
+- FMT_10_11_11
+- FMT_11_11_10
+- FMT_2_10_10_10
+- FMT_10_11_11_AS_16_16_16_16
+- FMT_11_11_10_AS_16_16_16_16
+- FMT_2_10_10_10_AS_16_16_16_16
+- FMT_8_8_8_8_AS_16_16_16_16
+- FMT_24_8
+
+## Special Formats
+- FMT_1
+- FMT_1_reverse
+- FMT_SHADOW
+- FMT_Y1
+- FMT_CR
+- FMT_CTX1
+
+## MPEG/Interlaced Formats
+- FMT_16_MPEG
+- FMT_16_16_MPEG
+- FMT_16_MPEG_INTERLACED
+- FMT_8_INTERLACED
+- FMT_16_INTERLACED
+- FMT_16_16_INTERLACED
+- FMT_32_AS_8
+- FMT_32_AS_8_8
+- FMT_32_AS_8_INTERLACED
+- FMT_32_AS_8_8_INTERLACED
+
+## Texture Types
+- texture1D
+- texture2D
+- texture3D
+- textureCUBE
+- Texture1D
+- Texture2D
+- Texture3D
+- TextureCube
+- Texture1DArray
+- Texture2DArray
+- Texture2DMS
+- Texture2DArrayMS
+- Texture2DMSArray
+
+## Depth Formats
+- AS_Z_SURFACE_FMT__DEPTH_D24_S8
+- AS_Z_SURFACE_FMT__DEPTH_D24_X8
+
+## GPU Number Formats
+- GPUNUMFORMAT_FRACTION
+- GPUNUMFORMAT_INTEGER
+
+## Export Stream Formats
+- AS_VS_EXPORT_STREAM_FORMAT_N__FLOAT16
+- AS_VS_EXPORT_STREAM_FORMAT_N__FLOAT32
+
+## Data Formats
+- DataFormat
+- NumFormat
+
+## Other Format-Related Functions
+- CompileGetVertexFormatData - Function for retrieving vertex format information
+- CompileGetTextureFormatData - Function for retrieving texture format information
+- CompileWithCXVUTextureFormat - Function related to texture format compilation 

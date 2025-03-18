@@ -1,0 +1,219 @@
+# Shader Code Snippets for Vulkan Rendering
+
+## Shader Declarations
+
+### Wash Out Effect Shader
+```hlsl
+sampler SourceTexture : register(s0);
+float4 WashOutValues : register(c0);
+
+float4 main(float2 TexCoord0 : TEXCOORD0): COLOR0
+{
+    float4 Input = tex2D(SourceTexture, TexCoord0);
+    float Luminance = Input.r*WashOutValues.r + Input.g*WashOutValues.g + Input.b*WashOutValues.b;
+    return float4(WashOutValues.a*Luminance, WashOutValues.a*Luminance, WashOutValues.a*Luminance, Input.a);
+}
+```
+
+### Noise Effect Shader
+```hlsl
+sampler SourceTexture : register(s0);
+sampler NoiseTexture : register(s1);
+float4 NoiseScale : register(c0);
+
+float4 main(float2 TexCoord0 : TEXCOORD0): COLOR0
+{
+    float4 DitherVal = tex2D(NoiseTexture, TexCoord0*NoiseScale.xy);
+    float4 Result = tex2D(SourceTexture, TexCoord0 + (DitherVal.xy - 0.5) * NoiseScale.zw);
+    return Result;
+}
+```
+
+### Alpha Threshold Shader
+```hlsl
+sampler SourceTexture : register(s0);
+float4 AlphaThreshold : register(c0);
+
+float4 main(float2 TexCoord0 : TEXCOORD0): COLOR0
+{
+    float4 Result = tex2D(SourceTexture, TexCoord0);
+    clip(AlphaThreshold.a - Result.a); /*kill this pixel if threshold - alpha is less than 0. */
+    return Result;
+}
+```
+
+### Color Multiply Shader
+```hlsl
+sampler SourceTexture : register(s0);
+float4 ConstColour : register(c0);
+
+float4 main(float2 TexCoord0 : TEXCOORD0): COLOR0
+{
+    float4 Result = tex2D(SourceTexture, TexCoord0).rgbr;
+    return Result*ConstColour;
+}
+```
+
+### Fatten Effect Shader
+```hlsl
+sampler SourceTexture : register(s0);
+float4 FattenStep : register(c3);
+
+float4 main(float2 TexCoord0 : TEXCOORD0): COLOR0
+{
+    float4 Result = tex2D(SourceTexture, TexCoord0);
+    for(int i = -FattenStep.z; i <= FattenStep.z; i++)
+    {
+        Result = max(Result, FattenStep.w*tex2D(SourceTexture, TexCoord0+(FattenStep.xy*i)));
+    }
+    return Result;
+}
+```
+
+### Blur Effect Shader
+```hlsl
+sampler SourceTexture : register(s0);
+float4 BlurStep : register(c3);
+float4 BlurCurve : register(c4);
+
+float4 main(float2 TexCoord0 : TEXCOORD0): COLOR0
+{
+    float4 Result = tex2D(SourceTexture, TexCoord0) * BlurCurve.r;
+    float curve = BlurCurve.g;
+    for(int i = 1; i <= 3; i++)
+    {
+        Result += tex2D(SourceTexture, TexCoord0+(BlurStep.xy*i)) * curve;
+        Result += tex2D(SourceTexture, TexCoord0+(BlurStep.xy*-i)) * curve;
+        curve *= BlurCurve.b;
+    }
+    return Result;
+}
+```
+
+### Gamma Correction Shader
+```hlsl
+sampler GammaSourceTexture : register(s0);
+float4 GammaMinColour : register(c0);
+float4 GammaScale : register(c1);
+
+float4 main(float2 TexCoord0 : TEXCOORD0): COLOR0
+{
+    return GammaMinColour + GammaScale.rgbr*(exp2(log2(tex2D(GammaSourceTexture, TexCoord0)))) * GammaScale.aaaa);
+    /* Alternative implementation:
+    return GammaMinColour + tex2D(GammaSourceTexture, TexCoord0) * GammaScale;
+    */
+}
+```
+
+### Z-Sprite Shader
+```hlsl
+sampler ZSpriteColorTexture : register(s0);
+sampler ZSpriteDepthTexture : register(s1);
+sampler ZSpriteStencilTexture : register(s2);
+
+struct ZSPRITE_PIXEL
+{
+    float4 Color : COLOR0;
+    float Depth : DEPTH0;
+    float Stencil : STENCIL0;
+};
+
+ZSPRITE_PIXEL main(float2 TexCoord0 : TEXCOORD0)
+{
+    ZSPRITE_PIXEL Out;
+    Out.Color = tex2D(ZSpriteColorTexture, TexCoord0).rgba;    /* A8R8G8B8 color texture */
+    Out.Depth = tex2D(ZSpriteDepthTexture, TexCoord0).r;       /* D24S8 depth texture */
+    Out.Stencil = tex2D(ZSpriteStencilTexture, TexCoord0).b;
+    return Out;
+}
+```
+
+### Basic Vertex Shader
+```hlsl
+// Basic vertex shader structure found in the code
+struct VS_IN
+{
+    float4 ObjPos : POSITION;
+    float2 TexCoord : TEXCOORD0;
+};
+
+struct VS_OUT
+{
+    float4 ProjPos : POSITION;
+    float2 TexCoord : TEXCOORD0;
+};
+
+uniform float4x4 matWVP : register(c0);
+
+VS_OUT main(VS_IN In)
+{
+    VS_OUT Out;
+    Out.ProjPos = mul(matWVP, In.ObjPos);
+    Out.TexCoord = In.TexCoord;
+    return Out;
+}
+```
+
+## Shader Model Versions Found
+- vs_1_1 (vs_1_0 is no longer supported)
+- vs_2_0
+- vs_2_sw
+- vs_2_x
+- vs_3_0
+- vs_3_sw
+- vs_3_swx
+- vs_3_xps
+- xvs_3_0
+
+## Export Stream Formats
+- AS_VS_EXPORT_STREAM_FORMAT_N__FLOAT16
+- AS_VS_EXPORT_STREAM_FORMAT_N__FLOAT32
+
+## Notes for Vulkan Implementation
+
+When converting these DirectX shaders to Vulkan:
+
+1. Replace `register(s#)` with Vulkan descriptor set and binding declarations
+2. Replace `tex2D` with Vulkan texture sampling functions
+3. Replace semantic declarations (TEXCOORD0, COLOR0) with Vulkan input/output variables
+4. Use SPIR-V instead of HLSL
+5. Consider using Vulkan's push constants for small uniform data like the constant registers
+6. Implement proper descriptor sets for samplers and textures
+
+Example Vulkan GLSL equivalent for the Wash Out shader:
+```glsl
+#version 450
+
+layout(set = 0, binding = 0) uniform sampler2D sourceTexture;
+layout(push_constant) uniform PushConstants {
+    vec4 washOutValues;
+};
+
+layout(location = 0) in vec2 inTexCoord;
+layout(location = 0) out vec4 outColor;
+
+void main() {
+    vec4 input = texture(sourceTexture, inTexCoord);
+    float luminance = input.r * washOutValues.r + input.g * washOutValues.g + input.b * washOutValues.b;
+    outColor = vec4(washOutValues.a * luminance, washOutValues.a * luminance, washOutValues.a * luminance, input.a);
+}
+```
+
+Example Vulkan GLSL equivalent for the Basic Vertex Shader:
+```glsl
+#version 450
+
+layout(set = 0, binding = 0) uniform UniformBufferObject {
+    mat4 matWVP;
+};
+
+layout(location = 0) in vec4 inPosition;
+layout(location = 1) in vec2 inTexCoord;
+
+layout(location = 0) out vec2 outTexCoord;
+
+void main() {
+    gl_Position = matWVP * inPosition;
+    outTexCoord = inTexCoord;
+}
+``` 

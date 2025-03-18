@@ -1,0 +1,138 @@
+[main]
+file_path = "./data/game/Default_2.xex"
+out_directory_path = "./ppc"
+switch_table_file_path = "bean.xex.switches.toml"
+
+skip_lr = true
+skip_msr = true
+ctr_as_local = true
+xer_as_local = true
+reserved_as_local = true
+cr_as_local = true
+non_argument_as_local = true
+non_volatile_as_local = true
+
+restgprlr_14_address = 0x823ed150
+savegprlr_14_address = 0x823ed100
+restfpr_14_address = 0x823ed55c
+savefpr_14_address = 0x823ed510
+restvmx_14_address = 0x823ef368
+savevmx_14_address = 0x823ef0d0
+restvmx_64_address = 0x823ef3fc
+savevmx_64_address = 0x823ef164
+
+
+longjmp_address = 0x823f1fa0
+setjmp_address = 0x823f22c0
+
+# These functions do not exist in .pdata and do
+# not analyze properly due to having jump tables
+functions = [
+    { address = 0x8211caa8, size = 0x120 },
+    { address = 0x820BFE00, size = 0x140 },
+    { address = 0x820c35e8, size = 0x68 },
+    { address = 0x820C5B28, size = 0x78 },
+    { address = 0x820C9C50, size = 0x2D0 },
+    { address = 0x82139418, size = 0x78 },
+    { address = 0x821544c0, size = 0x98 },
+    { address = 0x82154558, size = 0xE8 },
+    { address = 0x82154640, size = 0x118 },
+    { address = 0x820D8760, size = 0x5c0 },
+    { address = 0x820DADF0, size = 0x80 },
+    { address = 0x820DB9D0, size = 0x118 },
+    { address = 0x820DCF10, size = 0x98 },
+    { address = 0x820EB050, size = 0x70 },
+    { address = 0x820EB128, size = 0x98 },
+    { address = 0x820EB1C0, size = 0xc8 },
+    { address = 0x82118AC8, size = 0x100 },
+    { address = 0x82118C20, size = 0xE0 },
+    { address = 0x82119218, size = 0x118 },
+    { address = 0x821753B0, size = 0xd0 },
+    { address = 0x82183D58, size = 0x68 },
+    { address = 0x82183DC0, size = 0x168 },
+    { address = 0x820EEE80, size = 0x148 },
+    { address = 0x820F31C8, size = 0x148 },
+    { address = 0x820F45A0, size = 0x70 },
+    { address = 0x821D5F50, size = 0x118 },
+    { address = 0x82224DE8, size = 0x110 },
+    { address = 0x822701F8, size = 0x80 },
+    { address = 0x82300DC8, size = 0x78 },
+    { address = 0x82348AD8, size = 0x68 },
+    { address = 0x82348B40, size = 0x68 },
+    { address = 0x82348BA8, size = 0x60 },
+    { address = 0x823CED98, size = 0x1B8 },
+    { address = 0x823D43A8, size = 0x198 },
+    { address = 0x823D5D50, size = 0xA0 },
+    { address = 0x82348C08, size = 0x198 },
+    { address = 0x82348DA0, size = 0x170 },
+    { address = 0x82275AA8, size = 0x750 },
+    { address = 0x823A2540, size = 0x1638 }
+]
+
+invalid_instructions = [
+    { data = 0x00000000, size = 4 },  # Padding
+    { data = 0x831B1C90, size = 8 },  # C++ Frame Handler
+    { data = 0x8324B3BC, size = 8 },  # C Specific Frame Handler
+    { data = 0x831C8B50, size = 8 },  # Unknown Frame Handler
+    { data = 0x00485645, size = 44 }  # End of .text
+]
+
+# Memory Management
+[[midasm_hook]]
+name = "MemoryAllocatorHook"
+address = 0x82090000
+registers = ["r3", "r4"]
+
+[[midasm_hook]]
+name = "MemoryDeallocatorHook"
+address = 0x82090070
+registers = ["r3"]
+
+# File System
+[[midasm_hook]]
+name = "FileOpenHook"
+address = 0x82150C58
+registers = ["r3", "r4"]
+
+[[midasm_hook]]
+name = "FileCloseHook"
+address = 0x82150D20
+registers = ["r3"]
+
+[[midasm_hook]]
+name = "FileReadHook"
+address = 0x82150E88
+registers = ["r3", "r4", "r5"]
+
+# Graphics
+[[midasm_hook]]
+name = "TextureLoadHook"
+address = 0x82176890
+registers = ["r3", "r4"]
+
+[[midasm_hook]]
+name = "TextureUnloadHook"
+address = 0x82176920
+registers = ["r3"]
+
+# Audio
+[[midasm_hook]]
+name = "SoundPlayHook"
+address = 0x82120F0C
+registers = ["r3", "r4"]
+
+[[midasm_hook]]
+name = "SoundStopHook"
+address = 0x82120F88
+registers = ["r3"]
+
+# Input
+[[midasm_hook]]
+name = "InputProcessHook"
+address = 0x8212B7F0
+registers = ["r3", "r4"]
+
+[[midasm_hook]]
+name = "InputStateUpdateHook"
+address = 0x8212B888
+registers = ["r3"]

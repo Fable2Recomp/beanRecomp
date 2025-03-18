@@ -1,0 +1,11 @@
+{
+  "name": "beanrecomp",
+  "version": "0.1.0",
+  "dependencies": [
+    {
+      "name": "sdl2",
+      "version>=": "2.28.5"
+    }
+  ],
+  "builtin-baseline": "35c4249523ecc2ade23826f120d3f9f6a07a697c"
+} 
