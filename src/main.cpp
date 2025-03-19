@@ -1,92 +1,78 @@
+#include "ppc/ppc.h"
+#include "os/logger.h"
+#include "os/crash_handler.h"
 #include <iostream>
-#include <cstdint>
-#include <string>
-#include <vector>
-#include <map>
+#include <iomanip>
+#include <sstream>
 
-#ifndef NO_SDL3
-#include <SDL3/SDL.h>
-#endif
+int main(int argc, char* argv[])
+{
+    // Initialize logger
+    if (!BeanRecomp::OS::Logger::Initialize())
+    {
+        std::cerr << "Failed to initialize logger" << std::endl;
+        return 1;
+    }
 
-#include "ppc/ppc_types.h"
-#include "ppc/ppc_context.h"
-#include "ppc/ppc_recomp.h"
-#include "ppc/ppc_func_mapping.h"
-#include "ppc/ppc_memory.h"
+    // Initialize crash handler
+    if (!BeanRecomp::OS::CrashHandler::Initialize())
+    {
+        BeanRecomp::OS::Logger::LogError("Failed to initialize crash handler");
+        return 1;
+    }
 
-// Global context for PPC execution
-PPCContext g_PPCContext;
+    // Initialize PPC system
+    if (!BeanRecomp::PPC::PPCManager::Initialize())
+    {
+        BeanRecomp::OS::Logger::LogError("Failed to initialize PPC system");
+        return 1;
+    }
 
-// Constant for the base address
-const uint32_t BASE_ADDRESS = 0x80000000;  // Adjusted base address for Windows compatibility
+    // Configure PPC system
+    BeanRecomp::PPC::CPUConfig config;
+    config.coreCount = 1;
+    config.clockSpeed = 750000000;  // 750MHz
+    config.enableJIT = true;
+    config.enableMMU = true;
+    config.enableFPU = true;
+    config.enableAltivec = true;
+    config.enableDebug = true;
 
-// Function to initialize memory
-void initializeMemory() {
-    InitializeMemory(0, 1024 * 1024, 0);  // Clear the first 1MB of memory for Windows
-}
+    if (!BeanRecomp::PPC::PPCManager::SetCPUConfig(config))
+    {
+        BeanRecomp::OS::Logger::LogError("Failed to configure PPC system");
+        return 1;
+    }
 
-// Function to print the function mapping table
-void printFunctionMapping() {
-    std::cout << "Function mapping table:" << std::endl;
-    for (size_t i = 0; i < g_PPCFuncMappingCount; i++) {
-        std::cout << "0x" << std::hex << g_PPCFuncMappings[i].address 
-                  << " -> " << (void*)g_PPCFuncMappings[i].func << std::endl;
+    // Create a CPU core
+    auto core = BeanRecomp::PPC::PPCManager::CreateCore();
+    if (!core)
+    {
+        BeanRecomp::OS::Logger::LogError("Failed to create CPU core");
+        return 1;
+    }
 
-        // Only print the first 10 entries to avoid flooding the console
-        if (i >= 9) {
-            std::cout << "... and " << (g_PPCFuncMappingCount - 10) << " more functions" << std::endl;
-            break;
+    // Enable debug mode
+    BeanRecomp::PPC::PPCManager::SetDebugMode(true);
+
+    // Main loop
+    bool running = true;
+    while (running)
+    {
+        // Update PPC system
+        BeanRecomp::PPC::PPCManager::UpdateCores();
+
+        // Check for exit condition
+        if (core->GetState() == BeanRecomp::PPC::CPUState::HALTED)
+        {
+            running = false;
         }
     }
-}
 
-// Entry point for the application
-int main(int argc, char* argv[]) {
-    // Initialize SDL if available
-#ifndef NO_SDL3
-    if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO | SDL_INIT_TIMER) < 0) {
-        std::cerr << "SDL initialization failed: " << SDL_GetError() << std::endl;
-        return -1;  // Exit if SDL initialization fails
-    }
-#endif
-
-    // Print welcome message
-    std::cout << "BeanRecomp - Xbox 360 Static Recompiler" << std::endl;
-    std::cout << "----------------------------------------" << std::endl;
-
-    // Initialize the PPC context
-    g_PPCContext.reset();
-
-    // Initialize memory
-    initializeMemory();
-
-    // Print the function mapping table
-    printFunctionMapping();
-
-    // Example of calling a recompiled function
-    if (g_PPCFuncMappingCount > 0) {
-        uint32_t address = g_PPCFuncMappings[0].address;
-        void (*func)(PPCContext*) = g_PPCFuncMappings[0].func;
-
-        std::cout << "\nCalling function at address 0x" << std::hex << address << std::endl;
-
-        // Set up any necessary registers or memory before calling
-        g_PPCContext.r3.u32 = 1;  // Example parameter
-        g_PPCContext.r4.u32 = 2;  // Example parameter
-
-        // Call the function
-        func(&g_PPCContext);
-
-        // Print the result
-        std::cout << "Function returned, r3 = 0x" << std::hex << g_PPCContext.r3.u32 << std::endl;
-    } else {
-        std::cout << "No functions available to call." << std::endl;
-    }
-
-    // Clean up SDL if initialized
-#ifndef NO_SDL3
-    SDL_Quit();
-#endif
+    // Cleanup
+    BeanRecomp::PPC::PPCManager::Shutdown();
+    BeanRecomp::OS::CrashHandler::Shutdown();
+    BeanRecomp::OS::Logger::Shutdown();
 
     return 0;
 }

@@ -12,8 +12,10 @@
 
 #include <chrono>
 #include <thread>
+#include <filesystem>
+#include <iostream>
 
-namespace XenonRecomp
+namespace BeanRecomp
 {
     bool App::s_Initialized = false;
     bool App::s_Running = false;
@@ -31,6 +33,10 @@ namespace XenonRecomp
 
         s_Config = config;
 
+        // Create necessary directories
+        std::filesystem::create_directories(s_Config.dataPath);
+        std::filesystem::create_directories(s_Config.userDataPath);
+        
         // Set up initial logging
         Logger::SetLogToConsole(config.enableConsole);
         Logger::SetLogToFile(config.enableFileLogging);
@@ -40,6 +46,21 @@ namespace XenonRecomp
 
         Logger::Initialize();
         Logger::LogInfo("Initializing %s %s", config.appName.c_str(), config.appVersion.c_str());
+
+        // Initialize crash handler if enabled
+        if (config.enableCrashHandler)
+        {
+            if (!CrashHandler::Initialize())
+            {
+                Logger::LogError("Failed to initialize crash handler");
+                return false;
+            }
+            CrashHandler::SetCrashCallback(HandleCrash);
+            CrashHandler::SetDumpPath(s_Config.userDataPath + "/dumps");
+        }
+
+        // Load configuration
+        LoadConfig();
 
         // Initialize subsystems
         if (!InitializeSubsystems())
@@ -83,10 +104,87 @@ namespace XenonRecomp
         s_Running = false;
         ShutdownSubsystems();
 
+        // Save configuration
+        SaveConfig();
+
+        // Shutdown crash handler
+        if (s_Config.enableCrashHandler)
+        {
+            CrashHandler::Shutdown();
+        }
+
         Logger::LogInfo("Shutdown complete");
         Logger::Shutdown();
 
         s_Initialized = false;
+    }
+
+    void App::LoadConfig()
+    {
+        if (s_Config.configFilePath.empty())
+            return;
+
+        if (!Config::Initialize())
+        {
+            Logger::LogError("Failed to initialize config system");
+            return;
+        }
+
+        if (!Config::Load(s_Config.configFilePath))
+        {
+            Logger::LogWarning("Failed to load config file, using defaults");
+            return;
+        }
+
+        // Load configuration values
+        if (Config::HasValue("appName"))
+            s_Config.appName = Config::GetString("appName");
+        if (Config::HasValue("appVersion"))
+            s_Config.appVersion = Config::GetString("appVersion");
+        if (Config::HasValue("logFilePath"))
+            s_Config.logFilePath = Config::GetString("logFilePath");
+        if (Config::HasValue("enableConsole"))
+            s_Config.enableConsole = Config::GetBool("enableConsole");
+        if (Config::HasValue("enableFileLogging"))
+            s_Config.enableFileLogging = Config::GetBool("enableFileLogging");
+        if (Config::HasValue("enableCrashHandler"))
+            s_Config.enableCrashHandler = Config::GetBool("enableCrashHandler");
+        if (Config::HasValue("dataPath"))
+            s_Config.dataPath = Config::GetString("dataPath");
+        if (Config::HasValue("userDataPath"))
+            s_Config.userDataPath = Config::GetString("userDataPath");
+    }
+
+    void App::SaveConfig()
+    {
+        if (s_Config.configFilePath.empty())
+            return;
+
+        // Save configuration values
+        Config::SetString("appName", s_Config.appName);
+        Config::SetString("appVersion", s_Config.appVersion);
+        Config::SetString("logFilePath", s_Config.logFilePath);
+        Config::SetBool("enableConsole", s_Config.enableConsole);
+        Config::SetBool("enableFileLogging", s_Config.enableFileLogging);
+        Config::SetBool("enableCrashHandler", s_Config.enableCrashHandler);
+        Config::SetString("dataPath", s_Config.dataPath);
+        Config::SetString("userDataPath", s_Config.userDataPath);
+
+        if (!Config::Save(s_Config.configFilePath))
+        {
+            Logger::LogError("Failed to save config file");
+        }
+    }
+
+    void App::HandleCrash(const char* message)
+    {
+        Logger::LogError("Application crashed: %s", message);
+        
+        // Try to save any unsaved data
+        SaveConfig();
+        
+        // Show error message to user
+        MessageWindow::ShowError("Application Crash", message);
     }
 
     void App::Run()

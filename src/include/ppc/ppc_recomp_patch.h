@@ -1,10 +1,10 @@
 #pragma once
-#ifndef PPC_RECOMP_PATCH_H
-#define PPC_RECOMP_PATCH_H
+#ifndef PPC_RECOMP_PATCH_H_INCLUDED
+#define PPC_RECOMP_PATCH_H_INCLUDED
 
 // Include all necessary headers
 #include "ppc_types.h"
-#include "ppc_memory.h"
+#include "ppc_memory_macros.h"
 #include "ppc_context.h"
 #include "ppc_register.h"
 
@@ -205,6 +205,69 @@ namespace PPCRecompCompat {
 
 // Function implementation macros
 #define PPC_FUNC_PROLOGUE() 
-#define PPC_FUNC_IMPL(name) void name(PPCContext& ctx, uint32_t base_addr)
+#define PPC_FUNC_IMPL(name) void name(PPCContext* ctx, uint32_t base_addr)
+#define PPC_WEAK_FUNC(name) void name(PPCContext* ctx, uint32_t base_addr)
+#define alias(name) 
 
-#endif // PPC_RECOMP_PATCH_H 
+// Define a macro for the compare function
+#define compare template compare
+
+// Define XER and CR register types if not already defined
+#ifndef PPCXERRegister_DEFINED
+#define PPCXERRegister_DEFINED
+typedef int PPCXERRegister;
+#endif
+
+#ifndef PPCCRRegister_DEFINED
+#define PPCCRRegister_DEFINED
+typedef int PPCCRRegister;
+#endif
+
+// Fix for context redefinition in recompiled code
+#define context ctx
+
+// Forward declarations
+class PPCContext;
+class PPCCRRegister;
+class PPCXERRegister;
+
+// Context access helper
+#define ctx_arrow(ctx) ContextWrapper<PPCContext>(ctx, ctx)
+
+// Register access safety checks
+#define PPC_CHECK_REGISTER_ACCESS(reg) \
+    do { \
+        if (reg < 0 || reg >= 32) { \
+            throw std::out_of_range("Invalid register index: " + std::to_string(reg)); \
+        } \
+    } while(0)
+
+// Enhanced register access functions
+template<typename T>
+T GetRegisterValue(PPCContext* ctx, int reg) {
+    PPC_CHECK_REGISTER_ACCESS(reg);
+    return ctx->get_r(reg).as<T>();
+}
+
+template<typename T>
+void SetRegisterValue(PPCContext* ctx, int reg, T value) {
+    PPC_CHECK_REGISTER_ACCESS(reg);
+    ctx->get_r(reg) = PPCRegister(value);
+}
+
+// Condition register access
+template<typename T>
+void SetCRBit(PPCContext* ctx, int bit, T value) {
+    if (value) {
+        ctx->cr.value |= (1 << bit);
+    } else {
+        ctx->cr.value &= ~(1 << bit);
+    }
+}
+
+// Context state management
+void SaveContextState(PPCContext* ctx, uint8_t* buffer, size_t& size);
+void RestoreContextState(PPCContext* ctx, const uint8_t* buffer, size_t size);
+void DumpContextState(PPCContext* ctx);
+
+#endif // PPC_RECOMP_PATCH_H_INCLUDED 

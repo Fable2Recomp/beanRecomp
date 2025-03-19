@@ -24,7 +24,7 @@ events:
       The output was:
       0
       MSBuild version 17.13.19+0d9f5a35a for .NET Framework
-      Build started 2025-03-19 3:47:40 AM.
+      Build started 2025-03-19 4:13:30 AM.
       
       Project "C:\\Users\\mattscreative\\Documents\\beanRecomp\\build\\CMakeFiles\\4.0.0-rc4\\CompilerIdC\\CompilerIdC.vcxproj" on node 1 (default targets).
       PrepareForBuild:
@@ -90,7 +90,7 @@ events:
       The output was:
       0
       MSBuild version 17.13.19+0d9f5a35a for .NET Framework
-      Build started 2025-03-19 3:47:40 AM.
+      Build started 2025-03-19 4:13:31 AM.
       
       Project "C:\\Users\\mattscreative\\Documents\\beanRecomp\\build\\CMakeFiles\\4.0.0-rc4\\CompilerIdCXX\\CompilerIdCXX.vcxproj" on node 1 (default targets).
       PrepareForBuild:
@@ -149,54 +149,61 @@ events:
     checks:
       - "Detecting C compiler ABI info"
     directories:
-      source: "C:/Users/mattscreative/Documents/beanRecomp/build/CMakeFiles/CMakeScratch/TryCompile-nb5r1u"
-      binary: "C:/Users/mattscreative/Documents/beanRecomp/build/CMakeFiles/CMakeScratch/TryCompile-nb5r1u"
+      source: "C:/Users/mattscreative/Documents/beanRecomp/build/CMakeFiles/CMakeScratch/TryCompile-62gjvj"
+      binary: "C:/Users/mattscreative/Documents/beanRecomp/build/CMakeFiles/CMakeScratch/TryCompile-62gjvj"
     cmakeVariables:
       CMAKE_C_FLAGS: "/DWIN32 /D_WINDOWS /W3"
       CMAKE_C_FLAGS_DEBUG: "/MDd /Zi /Ob0 /Od /RTC1"
       CMAKE_EXE_LINKER_FLAGS: "/machine:x64"
-      VCPKG_INSTALLED_DIR: "C:/Users/mattscreative/Documents/beanRecomp/build/vcpkg_installed"
-      VCPKG_PREFER_SYSTEM_LIBS: "OFF"
-      VCPKG_TARGET_TRIPLET: "x64-windows"
-      Z_VCPKG_ROOT_DIR: "C:/vcpkg"
     buildResult:
       variable: "CMAKE_C_ABI_COMPILED"
       cached: true
       stdout: |
-        Change Dir: 'C:/Users/mattscreative/Documents/beanRecomp/build/CMakeFiles/CMakeScratch/TryCompile-nb5r1u'
+        Change Dir: 'C:/Users/mattscreative/Documents/beanRecomp/build/CMakeFiles/CMakeScratch/TryCompile-62gjvj'
         
-        Run Build Command(s): "C:/Program Files/Microsoft Visual Studio/2022/Community/MSBuild/Current/Bin/amd64/MSBuild.exe" cmTC_05858.vcxproj /p:Configuration=Debug /p:Platform=x64 /p:VisualStudioVersion=17.0 /v:n
+        Run Build Command(s): "C:/Program Files/Microsoft Visual Studio/2022/Community/MSBuild/Current/Bin/amd64/MSBuild.exe" cmTC_b0065.vcxproj /p:Configuration=Debug /p:Platform=x64 /p:VisualStudioVersion=17.0 /v:n
         MSBuild version 17.13.19+0d9f5a35a for .NET Framework
-        Build started 2025-03-19 3:47:41 AM.
+        Build started 2025-03-19 4:13:32 AM.
         
-        Project "C:\\Users\\mattscreative\\Documents\\beanRecomp\\build\\CMakeFiles\\CMakeScratch\\TryCompile-nb5r1u\\cmTC_05858.vcxproj" on node 1 (default targets).
+        Project "C:\\Users\\mattscreative\\Documents\\beanRecomp\\build\\CMakeFiles\\CMakeScratch\\TryCompile-62gjvj\\cmTC_b0065.vcxproj" on node 1 (default targets).
         PrepareForBuild:
-          Creating directory "cmTC_05858.dir\\Debug\\".
+          Creating directory "cmTC_b0065.dir\\Debug\\".
           Structured output is enabled. The formatting of compiler diagnostics will reflect the error hierarchy. See https://aka.ms/cpp/structured-output for more details.
-          Creating directory "C:\\Users\\mattscreative\\Documents\\beanRecomp\\build\\CMakeFiles\\CMakeScratch\\TryCompile-nb5r1u\\Debug\\".
-          Creating directory "cmTC_05858.dir\\Debug\\cmTC_05858.tlog\\".
+          Creating directory "C:\\Users\\mattscreative\\Documents\\beanRecomp\\build\\CMakeFiles\\CMakeScratch\\TryCompile-62gjvj\\Debug\\".
+          Creating directory "cmTC_b0065.dir\\Debug\\cmTC_b0065.tlog\\".
         InitializeBuildStatus:
-          Creating "cmTC_05858.dir\\Debug\\cmTC_05858.tlog\\unsuccessfulbuild" because "AlwaysCreate" was specified.
-          Touching "cmTC_05858.dir\\Debug\\cmTC_05858.tlog\\unsuccessfulbuild".
+          Creating "cmTC_b0065.dir\\Debug\\cmTC_b0065.tlog\\unsuccessfulbuild" because "AlwaysCreate" was specified.
+          Touching "cmTC_b0065.dir\\Debug\\cmTC_b0065.tlog\\unsuccessfulbuild".
+        VcpkgTripletSelection:
+          Using triplet "x64-windows" from "C:\\vcpkg\\installed\\x64-windows\\"
+          Using normalized configuration "Debug"
+        VcpkgCheckManifestRoot:
+          The vcpkg manifest was disabled, but we found a manifest file in C:\\Users\\mattscreative\\Documents\\beanRecomp\\. You may want to enable vcpkg manifests in your properties page or pass /p:VcpkgEnableManifest=true to the msbuild invocation.
         ClCompile:
-          C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.43.34808\\bin\\HostX64\\x64\\CL.exe /c /Zi /W3 /WX- /diagnostics:column /Od /Ob0 /D _MBCS /D WIN32 /D _WINDOWS /D "CMAKE_INTDIR=\\"Debug\\"" /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"cmTC_05858.dir\\Debug\\\\" /Fd"cmTC_05858.dir\\Debug\\vc143.pdb" /external:W3 /Gd /TC /errorReport:queue "C:\\Program Files\\CMake\\share\\cmake-4.0\\Modules\\CMakeCCompilerABI.c"
+          C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.43.34808\\bin\\HostX64\\x64\\CL.exe /c /I"C:\\vcpkg\\installed\\x64-windows\\include" /Zi /W3 /WX- /diagnostics:column /Od /Ob0 /D _MBCS /D WIN32 /D _WINDOWS /D "CMAKE_INTDIR=\\"Debug\\"" /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"cmTC_b0065.dir\\Debug\\\\" /Fd"cmTC_b0065.dir\\Debug\\vc143.pdb" /external:W3 /Gd /TC /errorReport:queue "C:\\Program Files\\CMake\\share\\cmake-4.0\\Modules\\CMakeCCompilerABI.c"
           Microsoft (R) C/C++ Optimizing Compiler Version 19.43.34809 for x64
           Copyright (C) Microsoft Corporation.  All rights reserved.
-          cl /c /Zi /W3 /WX- /diagnostics:column /Od /Ob0 /D _MBCS /D WIN32 /D _WINDOWS /D "CMAKE_INTDIR=\\"Debug\\"" /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"cmTC_05858.dir\\Debug\\\\" /Fd"cmTC_05858.dir\\Debug\\vc143.pdb" /external:W3 /Gd /TC /errorReport:queue "C:\\Program Files\\CMake\\share\\cmake-4.0\\Modules\\CMakeCCompilerABI.c"
+          cl /c /I"C:\\vcpkg\\installed\\x64-windows\\include" /Zi /W3 /WX- /diagnostics:column /Od /Ob0 /D _MBCS /D WIN32 /D _WINDOWS /D "CMAKE_INTDIR=\\"Debug\\"" /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"cmTC_b0065.dir\\Debug\\\\" /Fd"cmTC_b0065.dir\\Debug\\vc143.pdb" /external:W3 /Gd /TC /errorReport:queue "C:\\Program Files\\CMake\\share\\cmake-4.0\\Modules\\CMakeCCompilerABI.c"
           CMakeCCompilerABI.c
         Link:
-          C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.43.34808\\bin\\HostX64\\x64\\link.exe /ERRORREPORT:QUEUE /OUT:"C:\\Users\\mattscreative\\Documents\\beanRecomp\\build\\CMakeFiles\\CMakeScratch\\TryCompile-nb5r1u\\Debug\\cmTC_05858.exe" /INCREMENTAL /ILK:"cmTC_05858.dir\\Debug\\cmTC_05858.ilk" /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:/Users/mattscreative/Documents/beanRecomp/build/CMakeFiles/CMakeScratch/TryCompile-nb5r1u/Debug/cmTC_05858.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:/Users/mattscreative/Documents/beanRecomp/build/CMakeFiles/CMakeScratch/TryCompile-nb5r1u/Debug/cmTC_05858.lib" /MACHINE:X64  /machine:x64 cmTC_05858.dir\\Debug\\CMakeCCompilerABI.obj
-          cmTC_05858.vcxproj -> C:\\Users\\mattscreative\\Documents\\beanRecomp\\build\\CMakeFiles\\CMakeScratch\\TryCompile-nb5r1u\\Debug\\cmTC_05858.exe
+          C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.43.34808\\bin\\HostX64\\x64\\link.exe /ERRORREPORT:QUEUE /OUT:"C:\\Users\\mattscreative\\Documents\\beanRecomp\\build\\CMakeFiles\\CMakeScratch\\TryCompile-62gjvj\\Debug\\cmTC_b0065.exe" /INCREMENTAL /ILK:"cmTC_b0065.dir\\Debug\\cmTC_b0065.ilk" /NOLOGO /LIBPATH:"C:\\vcpkg\\installed\\x64-windows\\debug\\lib" /LIBPATH:"C:\\vcpkg\\installed\\x64-windows\\debug\\lib\\manual-link" kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib "C:\\vcpkg\\installed\\x64-windows\\debug\\lib\\*.lib" /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:/Users/mattscreative/Documents/beanRecomp/build/CMakeFiles/CMakeScratch/TryCompile-62gjvj/Debug/cmTC_b0065.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:/Users/mattscreative/Documents/beanRecomp/build/CMakeFiles/CMakeScratch/TryCompile-62gjvj/Debug/cmTC_b0065.lib" /MACHINE:X64  /machine:x64 cmTC_b0065.dir\\Debug\\CMakeCCompilerABI.obj
+          cmTC_b0065.vcxproj -> C:\\Users\\mattscreative\\Documents\\beanRecomp\\build\\CMakeFiles\\CMakeScratch\\TryCompile-62gjvj\\Debug\\cmTC_b0065.exe
+        AppLocalFromInstalled:
+          pwsh.exe -ExecutionPolicy Bypass -noprofile -File "C:\\vcpkg\\scripts\\buildsystems\\msbuild\\applocal.ps1" "C:\\Users\\mattscreative\\Documents\\beanRecomp\\build\\CMakeFiles\\CMakeScratch\\TryCompile-62gjvj\\Debug\\cmTC_b0065.exe" "C:\\vcpkg\\installed\\x64-windows\\debug\\bin" "cmTC_b0065.dir\\Debug\\cmTC_b0065.tlog\\cmTC_b0065.write.1u.tlog" "cmTC_b0065.dir\\Debug\\vcpkg.applocal.log"
+          'pwsh.exe' is not recognized as an internal or external command,
+          operable program or batch file.
+          The command "pwsh.exe -ExecutionPolicy Bypass -noprofile -File "C:\\vcpkg\\scripts\\buildsystems\\msbuild\\applocal.ps1" "C:\\Users\\mattscreative\\Documents\\beanRecomp\\build\\CMakeFiles\\CMakeScratch\\TryCompile-62gjvj\\Debug\\cmTC_b0065.exe" "C:\\vcpkg\\installed\\x64-windows\\debug\\bin" "cmTC_b0065.dir\\Debug\\cmTC_b0065.tlog\\cmTC_b0065.write.1u.tlog" "cmTC_b0065.dir\\Debug\\vcpkg.applocal.log"" exited with code 9009.
+          "C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\powershell.exe" -ExecutionPolicy Bypass -noprofile -File "C:\\vcpkg\\scripts\\buildsystems\\msbuild\\applocal.ps1" "C:\\Users\\mattscreative\\Documents\\beanRecomp\\build\\CMakeFiles\\CMakeScratch\\TryCompile-62gjvj\\Debug\\cmTC_b0065.exe" "C:\\vcpkg\\installed\\x64-windows\\debug\\bin" "cmTC_b0065.dir\\Debug\\cmTC_b0065.tlog\\cmTC_b0065.write.1u.tlog" "cmTC_b0065.dir\\Debug\\vcpkg.applocal.log"
         FinalizeBuildStatus:
-          Deleting file "cmTC_05858.dir\\Debug\\cmTC_05858.tlog\\unsuccessfulbuild".
-          Touching "cmTC_05858.dir\\Debug\\cmTC_05858.tlog\\cmTC_05858.lastbuildstate".
-        Done Building Project "C:\\Users\\mattscreative\\Documents\\beanRecomp\\build\\CMakeFiles\\CMakeScratch\\TryCompile-nb5r1u\\cmTC_05858.vcxproj" (default targets).
+          Deleting file "cmTC_b0065.dir\\Debug\\cmTC_b0065.tlog\\unsuccessfulbuild".
+          Touching "cmTC_b0065.dir\\Debug\\cmTC_b0065.tlog\\cmTC_b0065.lastbuildstate".
+        Done Building Project "C:\\Users\\mattscreative\\Documents\\beanRecomp\\build\\CMakeFiles\\CMakeScratch\\TryCompile-62gjvj\\cmTC_b0065.vcxproj" (default targets).
         
         Build succeeded.
             0 Warning(s)
             0 Error(s)
         
-        Time Elapsed 00:00:00.32
+        Time Elapsed 00:00:00.57
         
       exitCode: 0
   -
@@ -236,55 +243,62 @@ events:
     checks:
       - "Detecting CXX compiler ABI info"
     directories:
-      source: "C:/Users/mattscreative/Documents/beanRecomp/build/CMakeFiles/CMakeScratch/TryCompile-v61cfx"
-      binary: "C:/Users/mattscreative/Documents/beanRecomp/build/CMakeFiles/CMakeScratch/TryCompile-v61cfx"
+      source: "C:/Users/mattscreative/Documents/beanRecomp/build/CMakeFiles/CMakeScratch/TryCompile-d4m97h"
+      binary: "C:/Users/mattscreative/Documents/beanRecomp/build/CMakeFiles/CMakeScratch/TryCompile-d4m97h"
     cmakeVariables:
       CMAKE_CXX_FLAGS: "/DWIN32 /D_WINDOWS /W3 /GR /EHsc"
       CMAKE_CXX_FLAGS_DEBUG: "/MDd /Zi /Ob0 /Od /RTC1"
       CMAKE_CXX_SCAN_FOR_MODULES: "OFF"
       CMAKE_EXE_LINKER_FLAGS: "/machine:x64"
-      VCPKG_INSTALLED_DIR: "C:/Users/mattscreative/Documents/beanRecomp/build/vcpkg_installed"
-      VCPKG_PREFER_SYSTEM_LIBS: "OFF"
-      VCPKG_TARGET_TRIPLET: "x64-windows"
-      Z_VCPKG_ROOT_DIR: "C:/vcpkg"
     buildResult:
       variable: "CMAKE_CXX_ABI_COMPILED"
       cached: true
       stdout: |
-        Change Dir: 'C:/Users/mattscreative/Documents/beanRecomp/build/CMakeFiles/CMakeScratch/TryCompile-v61cfx'
+        Change Dir: 'C:/Users/mattscreative/Documents/beanRecomp/build/CMakeFiles/CMakeScratch/TryCompile-d4m97h'
         
-        Run Build Command(s): "C:/Program Files/Microsoft Visual Studio/2022/Community/MSBuild/Current/Bin/amd64/MSBuild.exe" cmTC_2aacd.vcxproj /p:Configuration=Debug /p:Platform=x64 /p:VisualStudioVersion=17.0 /v:n
+        Run Build Command(s): "C:/Program Files/Microsoft Visual Studio/2022/Community/MSBuild/Current/Bin/amd64/MSBuild.exe" cmTC_bdf54.vcxproj /p:Configuration=Debug /p:Platform=x64 /p:VisualStudioVersion=17.0 /v:n
         MSBuild version 17.13.19+0d9f5a35a for .NET Framework
-        Build started 2025-03-19 3:47:42 AM.
+        Build started 2025-03-19 4:13:33 AM.
         
-        Project "C:\\Users\\mattscreative\\Documents\\beanRecomp\\build\\CMakeFiles\\CMakeScratch\\TryCompile-v61cfx\\cmTC_2aacd.vcxproj" on node 1 (default targets).
+        Project "C:\\Users\\mattscreative\\Documents\\beanRecomp\\build\\CMakeFiles\\CMakeScratch\\TryCompile-d4m97h\\cmTC_bdf54.vcxproj" on node 1 (default targets).
         PrepareForBuild:
-          Creating directory "cmTC_2aacd.dir\\Debug\\".
+          Creating directory "cmTC_bdf54.dir\\Debug\\".
           Structured output is enabled. The formatting of compiler diagnostics will reflect the error hierarchy. See https://aka.ms/cpp/structured-output for more details.
-          Creating directory "C:\\Users\\mattscreative\\Documents\\beanRecomp\\build\\CMakeFiles\\CMakeScratch\\TryCompile-v61cfx\\Debug\\".
-          Creating directory "cmTC_2aacd.dir\\Debug\\cmTC_2aacd.tlog\\".
+          Creating directory "C:\\Users\\mattscreative\\Documents\\beanRecomp\\build\\CMakeFiles\\CMakeScratch\\TryCompile-d4m97h\\Debug\\".
+          Creating directory "cmTC_bdf54.dir\\Debug\\cmTC_bdf54.tlog\\".
         InitializeBuildStatus:
-          Creating "cmTC_2aacd.dir\\Debug\\cmTC_2aacd.tlog\\unsuccessfulbuild" because "AlwaysCreate" was specified.
-          Touching "cmTC_2aacd.dir\\Debug\\cmTC_2aacd.tlog\\unsuccessfulbuild".
+          Creating "cmTC_bdf54.dir\\Debug\\cmTC_bdf54.tlog\\unsuccessfulbuild" because "AlwaysCreate" was specified.
+          Touching "cmTC_bdf54.dir\\Debug\\cmTC_bdf54.tlog\\unsuccessfulbuild".
+        VcpkgTripletSelection:
+          Using triplet "x64-windows" from "C:\\vcpkg\\installed\\x64-windows\\"
+          Using normalized configuration "Debug"
+        VcpkgCheckManifestRoot:
+          The vcpkg manifest was disabled, but we found a manifest file in C:\\Users\\mattscreative\\Documents\\beanRecomp\\. You may want to enable vcpkg manifests in your properties page or pass /p:VcpkgEnableManifest=true to the msbuild invocation.
         ClCompile:
-          C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.43.34808\\bin\\HostX64\\x64\\CL.exe /c /Zi /W3 /WX- /diagnostics:column /Od /Ob0 /D _MBCS /D WIN32 /D _WINDOWS /D "CMAKE_INTDIR=\\"Debug\\"" /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /GR /Fo"cmTC_2aacd.dir\\Debug\\\\" /Fd"cmTC_2aacd.dir\\Debug\\vc143.pdb" /external:W3 /Gd /TP /errorReport:queue "C:\\Program Files\\CMake\\share\\cmake-4.0\\Modules\\CMakeCXXCompilerABI.cpp"
+          C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.43.34808\\bin\\HostX64\\x64\\CL.exe /c /I"C:\\vcpkg\\installed\\x64-windows\\include" /Zi /W3 /WX- /diagnostics:column /Od /Ob0 /D _MBCS /D WIN32 /D _WINDOWS /D "CMAKE_INTDIR=\\"Debug\\"" /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /GR /Fo"cmTC_bdf54.dir\\Debug\\\\" /Fd"cmTC_bdf54.dir\\Debug\\vc143.pdb" /external:W3 /Gd /TP /errorReport:queue "C:\\Program Files\\CMake\\share\\cmake-4.0\\Modules\\CMakeCXXCompilerABI.cpp"
           Microsoft (R) C/C++ Optimizing Compiler Version 19.43.34809 for x64
           Copyright (C) Microsoft Corporation.  All rights reserved.
-          cl /c /Zi /W3 /WX- /diagnostics:column /Od /Ob0 /D _MBCS /D WIN32 /D _WINDOWS /D "CMAKE_INTDIR=\\"Debug\\"" /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /GR /Fo"cmTC_2aacd.dir\\Debug\\\\" /Fd"cmTC_2aacd.dir\\Debug\\vc143.pdb" /external:W3 /Gd /TP /errorReport:queue "C:\\Program Files\\CMake\\share\\cmake-4.0\\Modules\\CMakeCXXCompilerABI.cpp"
+          cl /c /I"C:\\vcpkg\\installed\\x64-windows\\include" /Zi /W3 /WX- /diagnostics:column /Od /Ob0 /D _MBCS /D WIN32 /D _WINDOWS /D "CMAKE_INTDIR=\\"Debug\\"" /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /GR /Fo"cmTC_bdf54.dir\\Debug\\\\" /Fd"cmTC_bdf54.dir\\Debug\\vc143.pdb" /external:W3 /Gd /TP /errorReport:queue "C:\\Program Files\\CMake\\share\\cmake-4.0\\Modules\\CMakeCXXCompilerABI.cpp"
           CMakeCXXCompilerABI.cpp
         Link:
-          C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.43.34808\\bin\\HostX64\\x64\\link.exe /ERRORREPORT:QUEUE /OUT:"C:\\Users\\mattscreative\\Documents\\beanRecomp\\build\\CMakeFiles\\CMakeScratch\\TryCompile-v61cfx\\Debug\\cmTC_2aacd.exe" /INCREMENTAL /ILK:"cmTC_2aacd.dir\\Debug\\cmTC_2aacd.ilk" /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:/Users/mattscreative/Documents/beanRecomp/build/CMakeFiles/CMakeScratch/TryCompile-v61cfx/Debug/cmTC_2aacd.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:/Users/mattscreative/Documents/beanRecomp/build/CMakeFiles/CMakeScratch/TryCompile-v61cfx/Debug/cmTC_2aacd.lib" /MACHINE:X64  /machine:x64 cmTC_2aacd.dir\\Debug\\CMakeCXXCompilerABI.obj
-          cmTC_2aacd.vcxproj -> C:\\Users\\mattscreative\\Documents\\beanRecomp\\build\\CMakeFiles\\CMakeScratch\\TryCompile-v61cfx\\Debug\\cmTC_2aacd.exe
+          C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.43.34808\\bin\\HostX64\\x64\\link.exe /ERRORREPORT:QUEUE /OUT:"C:\\Users\\mattscreative\\Documents\\beanRecomp\\build\\CMakeFiles\\CMakeScratch\\TryCompile-d4m97h\\Debug\\cmTC_bdf54.exe" /INCREMENTAL /ILK:"cmTC_bdf54.dir\\Debug\\cmTC_bdf54.ilk" /NOLOGO /LIBPATH:"C:\\vcpkg\\installed\\x64-windows\\debug\\lib" /LIBPATH:"C:\\vcpkg\\installed\\x64-windows\\debug\\lib\\manual-link" kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib "C:\\vcpkg\\installed\\x64-windows\\debug\\lib\\*.lib" /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:/Users/mattscreative/Documents/beanRecomp/build/CMakeFiles/CMakeScratch/TryCompile-d4m97h/Debug/cmTC_bdf54.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:/Users/mattscreative/Documents/beanRecomp/build/CMakeFiles/CMakeScratch/TryCompile-d4m97h/Debug/cmTC_bdf54.lib" /MACHINE:X64  /machine:x64 cmTC_bdf54.dir\\Debug\\CMakeCXXCompilerABI.obj
+          cmTC_bdf54.vcxproj -> C:\\Users\\mattscreative\\Documents\\beanRecomp\\build\\CMakeFiles\\CMakeScratch\\TryCompile-d4m97h\\Debug\\cmTC_bdf54.exe
+        AppLocalFromInstalled:
+          pwsh.exe -ExecutionPolicy Bypass -noprofile -File "C:\\vcpkg\\scripts\\buildsystems\\msbuild\\applocal.ps1" "C:\\Users\\mattscreative\\Documents\\beanRecomp\\build\\CMakeFiles\\CMakeScratch\\TryCompile-d4m97h\\Debug\\cmTC_bdf54.exe" "C:\\vcpkg\\installed\\x64-windows\\debug\\bin" "cmTC_bdf54.dir\\Debug\\cmTC_bdf54.tlog\\cmTC_bdf54.write.1u.tlog" "cmTC_bdf54.dir\\Debug\\vcpkg.applocal.log"
+          'pwsh.exe' is not recognized as an internal or external command,
+          operable program or batch file.
+          The command "pwsh.exe -ExecutionPolicy Bypass -noprofile -File "C:\\vcpkg\\scripts\\buildsystems\\msbuild\\applocal.ps1" "C:\\Users\\mattscreative\\Documents\\beanRecomp\\build\\CMakeFiles\\CMakeScratch\\TryCompile-d4m97h\\Debug\\cmTC_bdf54.exe" "C:\\vcpkg\\installed\\x64-windows\\debug\\bin" "cmTC_bdf54.dir\\Debug\\cmTC_bdf54.tlog\\cmTC_bdf54.write.1u.tlog" "cmTC_bdf54.dir\\Debug\\vcpkg.applocal.log"" exited with code 9009.
+          "C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\powershell.exe" -ExecutionPolicy Bypass -noprofile -File "C:\\vcpkg\\scripts\\buildsystems\\msbuild\\applocal.ps1" "C:\\Users\\mattscreative\\Documents\\beanRecomp\\build\\CMakeFiles\\CMakeScratch\\TryCompile-d4m97h\\Debug\\cmTC_bdf54.exe" "C:\\vcpkg\\installed\\x64-windows\\debug\\bin" "cmTC_bdf54.dir\\Debug\\cmTC_bdf54.tlog\\cmTC_bdf54.write.1u.tlog" "cmTC_bdf54.dir\\Debug\\vcpkg.applocal.log"
         FinalizeBuildStatus:
-          Deleting file "cmTC_2aacd.dir\\Debug\\cmTC_2aacd.tlog\\unsuccessfulbuild".
-          Touching "cmTC_2aacd.dir\\Debug\\cmTC_2aacd.tlog\\cmTC_2aacd.lastbuildstate".
-        Done Building Project "C:\\Users\\mattscreative\\Documents\\beanRecomp\\build\\CMakeFiles\\CMakeScratch\\TryCompile-v61cfx\\cmTC_2aacd.vcxproj" (default targets).
+          Deleting file "cmTC_bdf54.dir\\Debug\\cmTC_bdf54.tlog\\unsuccessfulbuild".
+          Touching "cmTC_bdf54.dir\\Debug\\cmTC_bdf54.tlog\\cmTC_bdf54.lastbuildstate".
+        Done Building Project "C:\\Users\\mattscreative\\Documents\\beanRecomp\\build\\CMakeFiles\\CMakeScratch\\TryCompile-d4m97h\\cmTC_bdf54.vcxproj" (default targets).
         
         Build succeeded.
             0 Warning(s)
             0 Error(s)
         
-        Time Elapsed 00:00:00.32
+        Time Elapsed 00:00:00.60
         
       exitCode: 0
   -

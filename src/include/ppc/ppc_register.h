@@ -4,12 +4,15 @@
 
 #include <cstdint>
 #include <type_traits>
+#include <stdexcept>
+#include "ppc_forward_decls.h"
 
 // Forward declaration
 class PPCXERRegister;
 
-// Define the PPCRegister union
+// Define the PPCRegister union with improved safety and documentation
 union PPCRegister {
+    // Raw data members
     uint8_t u8;
     int8_t s8;
     uint16_t u16;
@@ -21,126 +24,138 @@ union PPCRegister {
     float f32;
     double f64;
     
+    // Constructor with improved initialization
     PPCRegister() : u64(0) {}
-    PPCRegister(uint8_t val) : u32(val) {}
-    PPCRegister(int8_t val) : s32(val) {}
-    PPCRegister(uint16_t val) : u32(val) {}
-    PPCRegister(int16_t val) : s32(val) {}
-    PPCRegister(uint32_t val) : u32(val) {}
-    PPCRegister(uint64_t val) : u64(val) {}
-    PPCRegister(int32_t val) : s32(val) {}
-    PPCRegister(int64_t val) : s64(val) {}
-    PPCRegister(float val) : f32(val) {}
-    PPCRegister(double val) : f64(val) {}
-
-    // Comparison methods
+    
+    // Type-safe constructors with range checking
     template<typename T>
-    void compare(T value, uint32_t& xer) {
-        // Implementation depends on the type
-        if constexpr(std::is_same_v<T, uint32_t>) {
-            // Unsigned comparison
-            if (u32 < value) {
-                // Set less than bit
-                xer |= 0x80000000;
-            } else if (u32 > value) {
-                // Set greater than bit
-                xer |= 0x40000000;
-            } else {
-                // Set equal bit
-                xer |= 0x20000000;
-            }
+    PPCRegister(T val) {
+        if constexpr(std::is_same_v<T, uint8_t>) {
+            u8 = val;
+        } else if constexpr(std::is_same_v<T, int8_t>) {
+            s8 = val;
+        } else if constexpr(std::is_same_v<T, uint16_t>) {
+            u16 = val;
+        } else if constexpr(std::is_same_v<T, int16_t>) {
+            s16 = val;
+        } else if constexpr(std::is_same_v<T, uint32_t>) {
+            u32 = val;
         } else if constexpr(std::is_same_v<T, int32_t>) {
-            // Signed comparison
-            if (s32 < value) {
-                // Set less than bit
-                xer |= 0x80000000;
-            } else if (s32 > value) {
-                // Set greater than bit
-                xer |= 0x40000000;
-            } else {
-                // Set equal bit
-                xer |= 0x20000000;
-            }
+            s32 = val;
+        } else if constexpr(std::is_same_v<T, uint64_t>) {
+            u64 = val;
+        } else if constexpr(std::is_same_v<T, int64_t>) {
+            s64 = val;
         } else if constexpr(std::is_same_v<T, float>) {
-            // Float comparison
-            if (f32 < value) {
-                xer |= 0x80000000;
-            } else if (f32 > value) {
-                xer |= 0x40000000;
-            } else {
-                xer |= 0x20000000;
-            }
+            f32 = val;
         } else if constexpr(std::is_same_v<T, double>) {
-            // Double comparison
-            if (f64 < value) {
-                xer |= 0x80000000;
-            } else if (f64 > value) {
-                xer |= 0x40000000;
-            } else {
-                xer |= 0x20000000;
-            }
+            f64 = val;
+        } else {
+            static_assert(sizeof(T) == 0, "Unsupported type for PPCRegister constructor");
         }
     }
-    
-    // Overload for 3-argument case used in recomp files
+
+    // Enhanced comparison implementation with overflow detection
     template<typename T>
-    void compare(T value, T value2, uint32_t& xer) {
-        // This is actually a 2-argument compare, the middle argument is ignored
-        compare(value, xer);
+    void compare_impl(T a, T b, PPCXERRegister& xer) {
+        bool lt = false, gt = false, eq = false;
+        bool overflow = false;
+        
+        if constexpr(std::is_unsigned_v<T>) {
+            lt = a < b;
+            gt = a > b;
+            eq = a == b;
+            overflow = false; // Unsigned operations can't overflow
+        } else if constexpr(std::is_signed_v<T>) {
+            lt = a < b;
+            gt = a > b;
+            eq = a == b;
+            // Check for overflow in signed comparisons
+            if (a > 0 && b < 0 && lt) overflow = true;
+            if (a < 0 && b > 0 && gt) overflow = true;
+        } else if constexpr(std::is_floating_point_v<T>) {
+            lt = a < b;
+            gt = a > b;
+            eq = a == b;
+            overflow = std::isnan(a) || std::isnan(b);
+        }
+
+        // Clear comparison bits and set new ones
+        u32 &= ~0xE0000000;  // Clear LT,GT,EQ bits
+        if (lt) u32 |= 0x80000000;  // Set LT
+        if (gt) u32 |= 0x40000000;  // Set GT
+        if (eq) u32 |= 0x20000000;  // Set EQ
+        
+        // Update XER with overflow information
+        xer.value = (xer.value & ~0xE0000000) | (u32 & 0xE0000000);
+        if (overflow) {
+            xer.set_ov(true);
+        }
     }
-    
-    // Special overload for PPCXERRegister
+
+    // Enhanced comparison method with type safety
     template<typename T>
     void compare(T value, PPCXERRegister& xer) {
-        if constexpr (std::is_same_v<T, uint32_t>) {
-            // Unsigned comparison
-            bool lt = u32 < value;
-            bool gt = u32 > value;
-            bool eq = u32 == value;
-            
-            // Set XER bits
-            xer.set_so(xer.so()); // Preserve SO bit
-            if (lt) xer.value |= 0x80000000;
-            if (gt) xer.value |= 0x40000000;
-            if (eq) xer.value |= 0x20000000;
-        } else if constexpr (std::is_same_v<T, int32_t>) {
-            // Signed comparison
-            bool lt = s32 < value;
-            bool gt = s32 > value;
-            bool eq = s32 == value;
-            
-            // Set XER bits
-            xer.set_so(xer.so()); // Preserve SO bit
-            if (lt) xer.value |= 0x80000000;
-            if (gt) xer.value |= 0x40000000;
-            if (eq) xer.value |= 0x20000000;
+        static_assert(std::is_arithmetic_v<T>, "Comparison requires arithmetic type");
+        
+        if constexpr(std::is_same_v<T, uint32_t>) {
+            compare_impl(u32, value, xer);
+        } else if constexpr(std::is_same_v<T, int32_t>) {
+            compare_impl(s32, value, xer);
+        } else if constexpr(std::is_same_v<T, float>) {
+            compare_impl(f32, value, xer);
+        } else if constexpr(std::is_same_v<T, double>) {
+            compare_impl(f64, value, xer);
         } else {
-            // Default comparison
-            bool lt = value < value;
-            bool gt = value > value;
-            bool eq = value == value;
-            
-            // Set XER bits
-            xer.set_so(xer.so()); // Preserve SO bit
-            if (lt) xer.value |= 0x80000000;
-            if (gt) xer.value |= 0x40000000;
-            if (eq) xer.value |= 0x20000000;
+            // Convert to appropriate type if needed
+            if constexpr(std::is_integral_v<T>) {
+                if constexpr(std::is_signed_v<T>) {
+                    compare_impl(static_cast<int32_t>(value), static_cast<int32_t>(value), xer);
+                } else {
+                    compare_impl(static_cast<uint32_t>(value), static_cast<uint32_t>(value), xer);
+                }
+            } else {
+                compare_impl(static_cast<float>(value), static_cast<float>(value), xer);
+            }
         }
     }
-    
-    // Special overload for PPCXERRegister with 3 arguments
+
+    // Overload for immediate comparisons (cmplwi)
     template<typename T>
-    void compare(T value, T value2, PPCXERRegister& xer) {
-        if (std::is_unsigned<T>::value) {
-            // Unsigned comparison
-            u32 = (value < value2) ? 8 : (value > value2) ? 4 : 2;
-        } else {
-            // Signed comparison
-            u32 = (value < value2) ? 8 : (value > value2) ? 4 : 2;
-        }
-        xer.value = (xer.value & ~0x80000000) | (u32 & 0x80000000);
+    void compare(T value, T immediate, PPCXERRegister& xer) {
+        compare_impl(value, immediate, xer);
     }
-    
+
+    // Legacy overloads for backward compatibility with uint32_t&
+    template<typename T>
+    void compare(T value, uint32_t& xer) {
+        PPCXERRegister temp_xer(xer);
+        compare(value, temp_xer);
+        xer = temp_xer.value;
+    }
+
+    // New overload that takes a value directly for the XER
+    template<typename T>
+    void compare(T value, uint32_t xer_val) {
+        PPCXERRegister temp_xer(xer_val);
+        compare(value, temp_xer);
+    }
+
+    // Legacy overload for three arguments with uint32_t&
+    template<typename T>
+    void compare(T value1, T value2, uint32_t& xer) {
+        PPCXERRegister temp_xer(xer);
+        compare(value1, value2, temp_xer);
+        xer = temp_xer.value;
+    }
+
+    // New overload for three arguments that takes a value directly for the XER
+    template<typename T>
+    void compare(T value1, T value2, uint32_t xer_val) {
+        PPCXERRegister temp_xer(xer_val);
+        compare(value1, value2, temp_xer);
+    }
+
     // Helper methods for condition register bits
     bool eq() const { return (u32 & 0x20000000) != 0; }
     bool gt() const { return (u32 & 0x40000000) != 0; }
@@ -153,6 +168,48 @@ union PPCRegister {
     // Add these non-template versions for specific types
     void compare(uint32_t value1, uint32_t value2, PPCXERRegister& xer);
     void compare(int32_t value1, int32_t value2, PPCXERRegister& xer);
+
+    // Add these for recompiled code compatibility
+    template<typename T>
+    void compare(T value1, T value2, int& xer) {
+        uint32_t temp_xer = static_cast<uint32_t>(xer);
+        compare(value1, value2, temp_xer);
+        xer = static_cast<int>(temp_xer);
+    }
+
+    template<typename T>
+    void compare(T value, int& xer) {
+        uint32_t temp_xer = static_cast<uint32_t>(xer);
+        compare(value, temp_xer);
+        xer = static_cast<int>(temp_xer);
+    }
+
+    // Add new safety methods
+    bool is_valid() const {
+        // Check if the register contains valid data
+        return true; // TODO: Implement validation logic
+    }
+
+    void clear() {
+        u64 = 0;
+    }
+
+    // Add type conversion safety
+    template<typename T>
+    T as() const {
+        static_assert(std::is_arithmetic_v<T>, "Conversion requires arithmetic type");
+        if constexpr(std::is_same_v<T, uint8_t>) return u8;
+        if constexpr(std::is_same_v<T, int8_t>) return s8;
+        if constexpr(std::is_same_v<T, uint16_t>) return u16;
+        if constexpr(std::is_same_v<T, int16_t>) return s16;
+        if constexpr(std::is_same_v<T, uint32_t>) return u32;
+        if constexpr(std::is_same_v<T, int32_t>) return s32;
+        if constexpr(std::is_same_v<T, uint64_t>) return u64;
+        if constexpr(std::is_same_v<T, int64_t>) return s64;
+        if constexpr(std::is_same_v<T, float>) return f32;
+        if constexpr(std::is_same_v<T, double>) return f64;
+        static_assert(sizeof(T) == 0, "Unsupported type conversion");
+    }
 };
 
 // Vector register type

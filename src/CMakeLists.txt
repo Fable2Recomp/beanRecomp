@@ -8,47 +8,55 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 # Enable debug symbols
 set(CMAKE_BUILD_TYPE Debug)
 
-# Add audio subdirectory
-add_subdirectory(audio)
-
-# Source files
-file(GLOB_RECURSE SOURCES
-    "kernel/*.cpp"
-    "os/*.cpp"
-    "ui/*.cpp"
-    "cpu/*.cpp"
-    "hid/*.cpp"
-)
-
-# Headers
-include_directories(
-    .
-    kernel
-    os
-    ui
-    cpu
-    hid
-    audio
-)
-
-# Create library target
-add_library(BeanRecompLib STATIC ${SOURCES})
-
-# Platform-specific libraries
-if(WIN32)
-    target_link_libraries(BeanRecompLib PRIVATE shell32)
-endif()
-
-# Link with audio library
-target_link_libraries(BeanRecompLib PRIVATE audio)
-
-# Create test executable
-add_executable(test_components test_components.cpp)
-target_link_libraries(test_components PRIVATE BeanRecompLib)
+# Add subdirectories
+add_subdirectory(app)
+add_subdirectory(api)
+add_subdirectory(apu)
+add_subdirectory(cpu)
+add_subdirectory(gpu)
+add_subdirectory(hid)
+add_subdirectory(kernel)
+add_subdirectory(os)
+add_subdirectory(ui)
+add_subdirectory(ppc)
 
 # Create main executable
 add_executable(BeanRecomp main.cpp)
-target_link_libraries(BeanRecomp PRIVATE BeanRecompLib)
+
+# Link all libraries to the main executable
+target_link_libraries(BeanRecomp PRIVATE
+    app
+    api
+    apu
+    cpu
+    gpu
+    hid
+    kernel
+    os
+    ui
+    ppc
+)
+
+# Platform-specific libraries
+if(WIN32)
+    target_link_libraries(BeanRecomp PRIVATE shell32)
+endif()
+
+# Set include directories for the main executable
+target_include_directories(BeanRecomp PRIVATE
+    ${CMAKE_CURRENT_SOURCE_DIR}
+    ${CMAKE_CURRENT_SOURCE_DIR}/include
+    ${CMAKE_CURRENT_SOURCE_DIR}/app
+    ${CMAKE_CURRENT_SOURCE_DIR}/api
+    ${CMAKE_CURRENT_SOURCE_DIR}/apu
+    ${CMAKE_CURRENT_SOURCE_DIR}/cpu
+    ${CMAKE_CURRENT_SOURCE_DIR}/gpu
+    ${CMAKE_CURRENT_SOURCE_DIR}/hid
+    ${CMAKE_CURRENT_SOURCE_DIR}/kernel
+    ${CMAKE_CURRENT_SOURCE_DIR}/os
+    ${CMAKE_CURRENT_SOURCE_DIR}/ui
+    ${CMAKE_CURRENT_SOURCE_DIR}/ppc
+)
 
 # Find SDL3 (optional)
 find_package(SDL3 QUIET)

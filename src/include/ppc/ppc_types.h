@@ -10,7 +10,8 @@
 #include <algorithm> // For std::min
 #include "ppc_config.h"
 #include "ppc_memory.h"
-#include "ppc_register.h" // Include the PPCRegister definition
+#include "ppc_forward_decls.h" // Include forward declarations
+#include "ppc_memory_macros.h"
 #include <stdint.h>
 #include <math.h>
 
@@ -28,18 +29,15 @@
 #include <xmmintrin.h> // For __m128 type
 #endif
 
-// Forward declare PPCRegister for macros
-union PPCRegister;
-
 // Common types
-using u8 = unsigned char;
-using u16 = unsigned short;
-using u32 = unsigned int;
-using u64 = unsigned long long;
-using i8 = signed char;
-using i16 = signed short;
-using i32 = signed int;
-using i64 = signed long long;
+using u8 = uint8_t;
+using u16 = uint16_t;
+using u32 = uint32_t;
+using u64 = uint64_t;
+using s8 = int8_t;
+using s16 = int16_t;
+using s32 = int32_t;
+using s64 = int64_t;
 using f32 = float;
 using f64 = double;
 
@@ -47,22 +45,22 @@ using f64 = double;
 extern uint32_t base;
 
 // Memory access macros
-#define PPC_LOAD_U8(ctx_ptr, addr) g_Memory.ReadMemory8(ctx_ptr, addr)
-#define PPC_LOAD_U32(ctx_ptr, addr) g_Memory.ReadMemory32(ctx_ptr, addr)
-#define PPC_LOAD_U64(ctx_ptr, addr) g_Memory.ReadMemory64(ctx_ptr, addr)
-#define PPC_STORE_U8(ctx_ptr, addr, val) g_Memory.WriteMemory8(ctx_ptr, addr, val)
-#define PPC_STORE_U32(ctx_ptr, addr, val) g_Memory.WriteMemory32(ctx_ptr, addr, val)
-#define PPC_STORE_U64(ctx_ptr, addr, val) g_Memory.WriteMemory64(ctx_ptr, addr, val)
+#define PPC_LOAD_U8(ctx_ptr, addr) PPC_LOAD_U8_FUNC(ctx_ptr, addr)
+#define PPC_LOAD_U32(ctx_ptr, addr) PPC_LOAD_U32_FUNC(ctx_ptr, addr)
+#define PPC_LOAD_U64(ctx_ptr, addr) PPC_LOAD_U64_FUNC(ctx_ptr, addr)
+#define PPC_STORE_U8(ctx_ptr, addr, val) PPC_STORE_U8_FUNC(ctx_ptr, addr, val)
+#define PPC_STORE_U32(ctx_ptr, addr, val) PPC_STORE_U32_FUNC(ctx_ptr, addr, val)
+#define PPC_STORE_U64(ctx_ptr, addr, val) PPC_STORE_U64_FUNC(ctx_ptr, addr, val)
 
 // Signed memory access macros
-#define PPC_LOAD_S8(ctx_ptr, addr) static_cast<int8_t>(g_Memory.ReadMemory8((ctx_ptr), (addr)))
-#define PPC_LOAD_S16(ctx_ptr, addr) static_cast<int16_t>(g_Memory.ReadMemory32((ctx_ptr), (addr)) >> 16)
-#define PPC_LOAD_S32(ctx_ptr, addr) static_cast<int32_t>(g_Memory.ReadMemory32((ctx_ptr), (addr)))
-#define PPC_LOAD_S64(ctx_ptr, addr) static_cast<int64_t>(g_Memory.ReadMemory64((ctx_ptr), (addr)))
-#define PPC_STORE_S8(ctx_ptr, addr, val) g_Memory.WriteMemory8((ctx_ptr), (addr), static_cast<uint8_t>(val))
-#define PPC_STORE_S16(ctx_ptr, addr, val) g_Memory.WriteMemory32((ctx_ptr), (addr), static_cast<uint16_t>(val) << 16)
-#define PPC_STORE_S32(ctx_ptr, addr, val) g_Memory.WriteMemory32((ctx_ptr), (addr), static_cast<uint32_t>(val))
-#define PPC_STORE_S64(ctx_ptr, addr, val) g_Memory.WriteMemory64((ctx_ptr), (addr), static_cast<uint64_t>(val))
+#define PPC_LOAD_S8(ctx_ptr, addr) PPC_LOAD_S8_FUNC(ctx_ptr, addr)
+#define PPC_LOAD_S16(ctx_ptr, addr) PPC_LOAD_S16_FUNC(ctx_ptr, addr)
+#define PPC_LOAD_S32(ctx_ptr, addr) PPC_LOAD_S32_FUNC(ctx_ptr, addr)
+#define PPC_LOAD_S64(ctx_ptr, addr) PPC_LOAD_S64_FUNC(ctx_ptr, addr)
+#define PPC_STORE_S8(ctx_ptr, addr, val) PPC_STORE_S8_FUNC(ctx_ptr, addr, val)
+#define PPC_STORE_S16(ctx_ptr, addr, val) PPC_STORE_S16_FUNC(ctx_ptr, addr, val)
+#define PPC_STORE_S32(ctx_ptr, addr, val) PPC_STORE_S32_FUNC(ctx_ptr, addr, val)
+#define PPC_STORE_S64(ctx_ptr, addr, val) PPC_STORE_S64_FUNC(ctx_ptr, addr, val)
 
 // SIMD types and functions
 #ifdef HAS_SIMDE
@@ -234,9 +232,9 @@ void binary_op_array(T (&result)[N], const T (&a)[N], const T& b, Op op) {
 }
 
 // Forward declarations
-struct PPCContext;
-struct PPCCRRegister;
-struct PPCXERRegister;
+class PPCContext;
+class PPCCRRegister;
+class PPCXERRegister;
 
 // Vector register type
 using PPCVRegister = PPCRegister;
@@ -267,23 +265,23 @@ inline PPCRegister* get_register_ptr(T val) {
 }
 
 // Array access macros
-#define PPC_LOAD_ARRAY_U8(arr, idx) PPC_LOAD_U8(reinterpret_cast<uintptr_t>(arr) + (idx))
-#define PPC_LOAD_ARRAY_S8(arr, idx) static_cast<int8_t>(PPC_LOAD_U8(reinterpret_cast<uintptr_t>(arr) + (idx)))
-#define PPC_LOAD_ARRAY_U16(arr, idx) static_cast<uint16_t>(PPC_LOAD_U32(reinterpret_cast<uintptr_t>(arr) + ((idx) * 2)) >> 16)
-#define PPC_LOAD_ARRAY_S16(arr, idx) static_cast<int16_t>(PPC_LOAD_U32(reinterpret_cast<uintptr_t>(arr) + ((idx) * 2)) >> 16)
-#define PPC_LOAD_ARRAY_U32(arr, idx) PPC_LOAD_U32(reinterpret_cast<uintptr_t>(arr) + ((idx) * 4))
-#define PPC_LOAD_ARRAY_S32(arr, idx) static_cast<int32_t>(PPC_LOAD_U32(reinterpret_cast<uintptr_t>(arr) + ((idx) * 4)))
-#define PPC_LOAD_ARRAY_U64(arr, idx) PPC_LOAD_U64(reinterpret_cast<uintptr_t>(arr) + ((idx) * 8))
-#define PPC_LOAD_ARRAY_S64(arr, idx) static_cast<int64_t>(PPC_LOAD_U64(reinterpret_cast<uintptr_t>(arr) + ((idx) * 8)))
+#define PPC_LOAD_ARRAY_U8(arr, idx) PPC_LOAD_ARRAY_U8_FUNC(&g_PPCContext, (uint32_t)(arr), idx)
+#define PPC_LOAD_ARRAY_S8(arr, idx) PPC_LOAD_ARRAY_S8_FUNC(&g_PPCContext, (uint32_t)(arr), idx)
+#define PPC_LOAD_ARRAY_U16(arr, idx) PPC_LOAD_ARRAY_U16_FUNC(&g_PPCContext, (uint32_t)(arr), idx)
+#define PPC_LOAD_ARRAY_S16(arr, idx) PPC_LOAD_ARRAY_S16_FUNC(&g_PPCContext, (uint32_t)(arr), idx)
+#define PPC_LOAD_ARRAY_U32(arr, idx) PPC_LOAD_ARRAY_U32_FUNC(&g_PPCContext, (uint32_t)(arr), idx)
+#define PPC_LOAD_ARRAY_S32(arr, idx) PPC_LOAD_ARRAY_S32_FUNC(&g_PPCContext, (uint32_t)(arr), idx)
+#define PPC_LOAD_ARRAY_U64(arr, idx) PPC_LOAD_ARRAY_U64_FUNC(&g_PPCContext, (uint32_t)(arr), idx)
+#define PPC_LOAD_ARRAY_S64(arr, idx) PPC_LOAD_ARRAY_S64_FUNC(&g_PPCContext, (uint32_t)(arr), idx)
 
-#define PPC_STORE_ARRAY_U8(arr, idx, val) PPC_STORE_U8(reinterpret_cast<uintptr_t>(arr) + (idx), val)
-#define PPC_STORE_ARRAY_S8(arr, idx, val) PPC_STORE_U8(reinterpret_cast<uintptr_t>(arr) + (idx), static_cast<uint8_t>(val))
-#define PPC_STORE_ARRAY_U16(arr, idx, val) PPC_STORE_U32(reinterpret_cast<uintptr_t>(arr) + ((idx) * 2), ((val) & 0xFFFF) << 16)
-#define PPC_STORE_ARRAY_S16(arr, idx, val) PPC_STORE_U32(reinterpret_cast<uintptr_t>(arr) + ((idx) * 2), static_cast<uint16_t>(val) << 16)
-#define PPC_STORE_ARRAY_U32(arr, idx, val) PPC_STORE_U32(reinterpret_cast<uintptr_t>(arr) + ((idx) * 4), val)
-#define PPC_STORE_ARRAY_S32(arr, idx, val) PPC_STORE_U32(reinterpret_cast<uintptr_t>(arr) + ((idx) * 4), static_cast<uint32_t>(val))
-#define PPC_STORE_ARRAY_U64(arr, idx, val) PPC_STORE_U64(reinterpret_cast<uintptr_t>(arr) + ((idx) * 8), val)
-#define PPC_STORE_ARRAY_S64(arr, idx, val) PPC_STORE_U64(reinterpret_cast<uintptr_t>(arr) + ((idx) * 8), static_cast<uint64_t>(val))
+#define PPC_STORE_ARRAY_U8(arr, idx, val) PPC_STORE_ARRAY_U8_FUNC(&g_PPCContext, (uint32_t)(arr), idx, val)
+#define PPC_STORE_ARRAY_S8(arr, idx, val) PPC_STORE_ARRAY_S8_FUNC(&g_PPCContext, (uint32_t)(arr), idx, val)
+#define PPC_STORE_ARRAY_U16(arr, idx, val) PPC_STORE_ARRAY_U16_FUNC(&g_PPCContext, (uint32_t)(arr), idx, val)
+#define PPC_STORE_ARRAY_S16(arr, idx, val) PPC_STORE_ARRAY_S16_FUNC(&g_PPCContext, (uint32_t)(arr), idx, val)
+#define PPC_STORE_ARRAY_U32(arr, idx, val) PPC_STORE_ARRAY_U32_FUNC(&g_PPCContext, (uint32_t)(arr), idx, val)
+#define PPC_STORE_ARRAY_S32(arr, idx, val) PPC_STORE_ARRAY_S32_FUNC(&g_PPCContext, (uint32_t)(arr), idx, val)
+#define PPC_STORE_ARRAY_U64(arr, idx, val) PPC_STORE_ARRAY_U64_FUNC(&g_PPCContext, (uint32_t)(arr), idx, val)
+#define PPC_STORE_ARRAY_S64(arr, idx, val) PPC_STORE_ARRAY_S64_FUNC(&g_PPCContext, (uint32_t)(arr), idx, val)
 
 // Type conversion macros for scalar to array to assist with macro patterns
 #define ARRAY_U8_TO_U64(addr, idx) ((uint64_t)PPC_LOAD_ARRAY_U8(addr, idx))

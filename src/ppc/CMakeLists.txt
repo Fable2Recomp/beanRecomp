@@ -12,20 +12,16 @@ file(GLOB PPC_SOURCES
 )
 
 # Create a static library for the PPC recompilation
-add_library(ppc_recomp STATIC 
-    ${PPC_SOURCES}
+add_library(ppc STATIC
+    ppc.cpp
 )
 
 # Include directories
-target_include_directories(ppc_recomp PUBLIC
-    ${CMAKE_SOURCE_DIR}/src
-    ${CMAKE_SOURCE_DIR}/src/include
-    ${CMAKE_SOURCE_DIR}/src/include/ppc
-)
+target_include_directories(ppc PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 
 # Set compiler flags and definitions
 if(MSVC)
-    target_compile_options(ppc_recomp PRIVATE 
+    target_compile_options(ppc PRIVATE 
         /W3
         /arch:AVX
         /MP
@@ -37,7 +33,7 @@ if(MSVC)
         /wd4311  # Pointer truncation
         /wd4312  # Conversion to larger size
     )
-    target_compile_definitions(ppc_recomp PRIVATE
+    target_compile_definitions(ppc PRIVATE
         _CRT_SECURE_NO_WARNINGS
         NOMINMAX
         WIN32_LEAN_AND_MEAN
@@ -51,12 +47,12 @@ if(MSVC)
         PPC_COMPILER_MSVC
     )
 else()
-    target_compile_options(ppc_recomp PRIVATE
+    target_compile_options(ppc PRIVATE
         -Wall
         -Wextra
         -mavx
     )
-    target_compile_definitions(ppc_recomp PRIVATE
+    target_compile_definitions(ppc PRIVATE
         HAVE_MEMORY_H
         HAVE_STDINT_H
         HAVE_BUILTIN_ROTATELEFT
@@ -66,17 +62,17 @@ else()
 endif()
 
 # Export the library
-set_target_properties(ppc_recomp PROPERTIES
+set_target_properties(ppc PROPERTIES
     POSITION_INDEPENDENT_CODE ON
-    OUTPUT_NAME "ppc_recomp"
+    OUTPUT_NAME "ppc"
 )
 
 # Install the library
-install(TARGETS ppc_recomp
+install(TARGETS ppc
     ARCHIVE DESTINATION lib
     LIBRARY DESTINATION lib
     RUNTIME DESTINATION bin
 )
 
 # Add dependencies
-target_link_libraries(ppc_recomp PRIVATE) 
+target_link_libraries(ppc PRIVATE os) 

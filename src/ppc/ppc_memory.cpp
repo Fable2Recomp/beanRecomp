@@ -5,305 +5,175 @@
 #include <cstring>
 #include <stdexcept>
 
-// Global memory instance
-PPCMemory g_Memory;
+// Global memory instance (defined in main.cpp)
+extern PPCMemory* g_Memory;
 
-PPCMemory::PPCMemory() : memory(nullptr) {
-    memory = new uint8_t[TOTAL_MEMORY_SIZE]();
-    std::fill(cache.begin(), cache.end(), CacheEntry{0, 0, false});
+PPCMemory::PPCMemory() : m_memory(MEMORY_SIZE) {
+    reset();
 }
 
-PPCMemory::~PPCMemory() {
-    delete[] memory;
-    for (auto& page : pages) {
-        delete[] page.second.data;
-    }
+PPCMemory::~PPCMemory() = default;
+
+void PPCMemory::reset() {
+    std::fill(m_memory.begin(), m_memory.end(), 0);
+    m_mappings.clear();
 }
 
-void PPCMemory::InitializeMemory() {
-    // Clear main memory
-    std::memset(memory, 0, TOTAL_MEMORY_SIZE);
-    
-    // Clear cache
-    std::fill(cache.begin(), cache.end(), CacheEntry{0, 0, false});
-    
-    // Clear pages
-    pages.clear();
-    
-    // Map initial memory region
-    MapMemory(0, TOTAL_MEMORY_SIZE, MemoryAccess::Read | MemoryAccess::Write);
+bool PPCMemory::is_valid_address(uint32_t addr, size_t size) const {
+    return addr + size <= MEMORY_SIZE;
 }
 
-// Primary context-aware memory access functions
-uint32_t PPCMemory::ReadMemory32(PPCContext* ctx, uint32_t address) {
-    return ReadMemory32WithContext(ctx, address);
-}
-
-uint64_t PPCMemory::ReadMemory64(PPCContext* ctx, uint32_t address) {
-    return ReadMemory64WithContext(ctx, address);
-}
-
-uint8_t PPCMemory::ReadMemory8(PPCContext* ctx, uint32_t address) {
-    return ReadMemory8WithContext(ctx, address);
-}
-
-uint16_t PPCMemory::ReadMemory16(PPCContext* ctx, uint32_t address) {
-    return ReadMemory16WithContext(ctx, address);
-}
-
-void PPCMemory::WriteMemory32(PPCContext* ctx, uint32_t address, uint32_t value) {
-    WriteMemory32WithContext(ctx, address, value);
-}
-
-void PPCMemory::WriteMemory64(PPCContext* ctx, uint32_t address, uint64_t value) {
-    WriteMemory64WithContext(ctx, address, value);
-}
-
-void PPCMemory::WriteMemory8(PPCContext* ctx, uint32_t address, uint8_t value) {
-    WriteMemory8WithContext(ctx, address, value);
-}
-
-void PPCMemory::WriteMemory16(PPCContext* ctx, uint32_t address, uint16_t value) {
-    WriteMemory16WithContext(ctx, address, value);
-}
-
-// Internal context-aware implementations
-uint32_t PPCMemory::ReadMemory32WithContext(PPCContext* ctx, uint32_t address, uint32_t offset) {
-    uint32_t effectiveAddr = address + offset;
-    
-    // Check memory access
-    if (!CheckMemoryAccess(effectiveAddr, MemoryAccess::Read)) {
-        // Handle invalid access
-        return 0;
-    }
-    
-    // Try cache first
-    return ReadMemory32Cached(effectiveAddr);
-}
-
-void PPCMemory::WriteMemory32WithContext(PPCContext* ctx, uint32_t address, uint32_t value, uint32_t offset) {
-    uint32_t effectiveAddr = address + offset;
-    
-    // Check memory access
-    if (!CheckMemoryAccess(effectiveAddr, MemoryAccess::Write)) {
-        // Handle invalid access
-        return;
-    }
-    
-    // Call write hooks
-    for (auto& hook : writeHooks) {
-        hook(effectiveAddr, value);
-    }
-    
-    // Get the page
-    MemoryPage* page = GetPage(effectiveAddr);
-    if (!page || !page->writable) {
-        return;
-    }
-    
-    // Write the value
-    uint32_t pageOffset = GetPageOffset(effectiveAddr);
-    *reinterpret_cast<uint32_t*>(page->data + pageOffset) = value;
-    
-    // Invalidate cache
-    InvalidateCache(effectiveAddr);
-}
-
-uint64_t PPCMemory::ReadMemory64WithContext(PPCContext* ctx, uint32_t address, uint32_t offset) {
-    uint32_t effectiveAddr = address + offset;
-    uint64_t value = 0;
-    
-    // Read two 32-bit values
-    value = static_cast<uint64_t>(ReadMemory32WithContext(ctx, effectiveAddr)) << 32;
-    value |= ReadMemory32WithContext(ctx, effectiveAddr + 4);
-    
-    return value;
-}
-
-void PPCMemory::WriteMemory64WithContext(PPCContext* ctx, uint32_t address, uint64_t value, uint32_t offset) {
-    uint32_t effectiveAddr = address + offset;
-    
-    // Write two 32-bit values
-    WriteMemory32WithContext(ctx, effectiveAddr, static_cast<uint32_t>(value >> 32));
-    WriteMemory32WithContext(ctx, effectiveAddr + 4, static_cast<uint32_t>(value));
-}
-
-uint8_t PPCMemory::ReadMemory8WithContext(PPCContext* ctx, uint32_t address, uint32_t offset) {
-    uint32_t effectiveAddr = address + offset;
-    
-    // Check memory access
-    if (!CheckMemoryAccess(effectiveAddr, MemoryAccess::Read)) {
-        return 0;
-    }
-    
-    // Get the page
-    MemoryPage* page = GetPage(effectiveAddr);
-    if (!page) {
-        return 0;
-    }
-    
-    // Read the value
-    uint32_t pageOffset = GetPageOffset(effectiveAddr);
-    return page->data[pageOffset];
-}
-
-void PPCMemory::WriteMemory8WithContext(PPCContext* ctx, uint32_t address, uint8_t value, uint32_t offset) {
-    MemoryPage* page = GetPage(address + offset);
-    if (page && page->writable) {
-        uint32_t pageOffset = GetPageOffset(address + offset);
-        page->data[pageOffset] = value;
-        InvalidateCache(address + offset);
-        
-        // Call write hooks
-        for (const auto& hook : writeHooks) {
-            hook(address + offset, 1);
-        }
-    }
-}
-
-uint16_t PPCMemory::ReadMemory16WithContext(PPCContext* ctx, uint32_t address, uint32_t offset) {
-    address += offset;
-    
-    // Check if address is valid
-    if (address >= TOTAL_MEMORY_SIZE) {
-        printf("Memory access violation: ReadMemory16 at 0x%08X\n", address);
-        return 0;
-    }
-    
-    // Call read hooks if any
-    for (auto& hook : readHooks) {
-        hook(address, 2);
-    }
-    
-    // Read from memory
-    uint16_t* ptr = reinterpret_cast<uint16_t*>(&memory[address]);
-    return *ptr;
-}
-
-void PPCMemory::WriteMemory16WithContext(PPCContext* ctx, uint32_t address, uint16_t value, uint32_t offset) {
-    address += offset;
-    
-    // Check if address is valid
-    if (address >= TOTAL_MEMORY_SIZE) {
-        printf("Memory access violation: WriteMemory16 at 0x%08X\n", address);
-        return;
-    }
-    
-    // Call write hooks if any
-    for (auto& hook : writeHooks) {
-        hook(address, 2);
-    }
-    
-    // Write to memory
-    uint16_t* ptr = reinterpret_cast<uint16_t*>(&memory[address]);
-    *ptr = value;
-    
-    // Invalidate cache
-    InvalidateCache(address);
-}
-
-bool PPCMemory::CheckMemoryAccess(uint32_t address, MemoryAccess access) {
-    uint32_t pageIndex = GetPageIndex(address);
-    auto it = pages.find(pageIndex);
-    if (it == pages.end()) {
+bool PPCMemory::map(uint32_t addr, uint32_t size, uint32_t perms) {
+    if (!is_valid_address(addr, size)) {
         return false;
     }
     
-    int accessFlags = static_cast<int>(access);
-    return (accessFlags & static_cast<int>(MemoryAccess::Read)) == 0 || it->second.writable;
-}
-
-bool PPCMemory::MapMemory(uint32_t address, size_t size, MemoryAccess access) {
-    uint32_t startPage = GetPageIndex(address);
-    uint32_t endPage = GetPageIndex(address + size - 1);
-    
-    bool writable = (static_cast<int>(access) & static_cast<int>(MemoryAccess::Write)) != 0;
-    bool executable = (static_cast<int>(access) & static_cast<int>(MemoryAccess::Execute)) != 0;
-    
-    for (uint32_t pageIndex = startPage; pageIndex <= endPage; pageIndex++) {
-        // Skip if page already exists
-        if (pages.find(pageIndex) != pages.end()) {
-            continue;
+    // Check for overlapping mappings
+    for (const auto& mapping : m_mappings) {
+        if (addr < mapping.addr + mapping.size && addr + size > mapping.addr) {
+            return false;
         }
-        
-        // Create new page
-        MemoryPage page;
-        page.data = new uint8_t[PAGE_SIZE]();
-        page.writable = writable;
-        page.executable = executable;
-        
-        pages[pageIndex] = page;
     }
     
+    m_mappings.push_back({addr, size, perms});
     return true;
 }
 
-void PPCMemory::UnmapMemory(uint32_t address, size_t size) {
-    uint32_t startPage = GetPageIndex(address);
-    uint32_t endPage = GetPageIndex(address + size - 1);
-    
-    for (uint32_t pageIndex = startPage; pageIndex <= endPage; pageIndex++) {
-        auto it = pages.find(pageIndex);
-        if (it != pages.end()) {
-            delete[] it->second.data;
-            pages.erase(it);
+bool PPCMemory::unmap(uint32_t addr) {
+    for (auto it = m_mappings.begin(); it != m_mappings.end(); ++it) {
+        if (it->addr == addr) {
+            m_mappings.erase(it);
+            return true;
         }
     }
+    return false;
 }
 
-uint32_t PPCMemory::ReadMemory32Cached(uint32_t address) {
-    size_t cacheIndex = (address / 4) % CACHE_SIZE;
-    auto& entry = cache[cacheIndex];
-    
-    if (entry.valid && entry.address == address) {
-        return entry.value;
+uint8_t PPCMemory::read_u8(uint32_t addr) const {
+    if (!is_valid_address(addr, sizeof(uint8_t))) {
+        throw std::runtime_error("Invalid memory access");
     }
-    
-    // Cache miss - read from memory
-    MemoryPage* page = GetPage(address);
-    if (!page) {
-        return 0;
+    return m_memory[addr];
+}
+
+int8_t PPCMemory::read_s8(uint32_t addr) const {
+    return static_cast<int8_t>(read_u8(addr));
+}
+
+uint16_t PPCMemory::read_u16(uint32_t addr) const {
+    if (!is_valid_address(addr, sizeof(uint16_t))) {
+        throw std::runtime_error("Invalid memory access");
     }
-    
-    uint32_t pageOffset = GetPageOffset(address);
-    uint32_t value = *reinterpret_cast<uint32_t*>(page->data + pageOffset);
-    
-    // Update cache
-    entry = {address, value, true};
-    
-    return value;
+    return (m_memory[addr] << 8) | m_memory[addr + 1];
 }
 
-void PPCMemory::InvalidateCache(uint32_t address) {
-    size_t cacheIndex = (address / 4) % CACHE_SIZE;
-    cache[cacheIndex].valid = false;
+int16_t PPCMemory::read_s16(uint32_t addr) const {
+    return static_cast<int16_t>(read_u16(addr));
 }
 
-MemoryPage* PPCMemory::GetPage(uint32_t address, bool allocate) {
-    uint32_t pageIndex = GetPageIndex(address);
-    auto it = pages.find(pageIndex);
-    
-    if (it != pages.end()) {
-        return &it->second;
+uint32_t PPCMemory::read_u32(uint32_t addr) const {
+    if (!is_valid_address(addr, sizeof(uint32_t))) {
+        throw std::runtime_error("Invalid memory access");
     }
-    
-    if (allocate) {
-        MapMemory(address & ~(PAGE_SIZE - 1), PAGE_SIZE);
-        return &pages[pageIndex];
+    return (m_memory[addr] << 24) | (m_memory[addr + 1] << 16) |
+           (m_memory[addr + 2] << 8) | m_memory[addr + 3];
+}
+
+int32_t PPCMemory::read_s32(uint32_t addr) const {
+    return static_cast<int32_t>(read_u32(addr));
+}
+
+uint64_t PPCMemory::read_u64(uint32_t addr) const {
+    if (!is_valid_address(addr, sizeof(uint64_t))) {
+        throw std::runtime_error("Invalid memory access");
     }
-    
-    return nullptr;
+    return (static_cast<uint64_t>(read_u32(addr)) << 32) | read_u32(addr + 4);
 }
 
-void PPCMemory::AddReadHook(MemoryHook hook) {
-    readHooks.push_back(std::move(hook));
+int64_t PPCMemory::read_s64(uint32_t addr) const {
+    return static_cast<int64_t>(read_u64(addr));
 }
 
-void PPCMemory::AddWriteHook(MemoryHook hook) {
-    writeHooks.push_back(std::move(hook));
+float PPCMemory::read_f32(uint32_t addr) const {
+    uint32_t bits = read_u32(addr);
+    return *reinterpret_cast<const float*>(&bits);
 }
 
-uint32_t MemoryAllocatorHook(PPCContext* ctx) {
-    // TODO: Implement memory allocation
-    return 0;
+double PPCMemory::read_f64(uint32_t addr) const {
+    uint64_t bits = read_u64(addr);
+    return *reinterpret_cast<const double*>(&bits);
+}
+
+void PPCMemory::write_u8(uint32_t addr, uint8_t value) {
+    if (!is_valid_address(addr, sizeof(uint8_t))) {
+        throw std::runtime_error("Invalid memory access");
+    }
+    m_memory[addr] = value;
+}
+
+void PPCMemory::write_s8(uint32_t addr, int8_t value) {
+    write_u8(addr, static_cast<uint8_t>(value));
+}
+
+void PPCMemory::write_u16(uint32_t addr, uint16_t value) {
+    if (!is_valid_address(addr, sizeof(uint16_t))) {
+        throw std::runtime_error("Invalid memory access");
+    }
+    m_memory[addr] = value >> 8;
+    m_memory[addr + 1] = value & 0xFF;
+}
+
+void PPCMemory::write_s16(uint32_t addr, int16_t value) {
+    write_u16(addr, static_cast<uint16_t>(value));
+}
+
+void PPCMemory::write_u32(uint32_t addr, uint32_t value) {
+    if (!is_valid_address(addr, sizeof(uint32_t))) {
+        throw std::runtime_error("Invalid memory access");
+    }
+    m_memory[addr] = value >> 24;
+    m_memory[addr + 1] = (value >> 16) & 0xFF;
+    m_memory[addr + 2] = (value >> 8) & 0xFF;
+    m_memory[addr + 3] = value & 0xFF;
+}
+
+void PPCMemory::write_s32(uint32_t addr, int32_t value) {
+    write_u32(addr, static_cast<uint32_t>(value));
+}
+
+void PPCMemory::write_u64(uint32_t addr, uint64_t value) {
+    if (!is_valid_address(addr, sizeof(uint64_t))) {
+        throw std::runtime_error("Invalid memory access");
+    }
+    write_u32(addr, value >> 32);
+    write_u32(addr + 4, value & 0xFFFFFFFF);
+}
+
+void PPCMemory::write_s64(uint32_t addr, int64_t value) {
+    write_u64(addr, static_cast<uint64_t>(value));
+}
+
+void PPCMemory::write_f32(uint32_t addr, float value) {
+    uint32_t bits = *reinterpret_cast<const uint32_t*>(&value);
+    write_u32(addr, bits);
+}
+
+void PPCMemory::write_f64(uint32_t addr, double value) {
+    uint64_t bits = *reinterpret_cast<const uint64_t*>(&value);
+    write_u64(addr, bits);
+}
+
+// Initialize memory system
+void InitializeMemory() {
+    if (!g_Memory) {
+        g_Memory = new PPCMemory();
+    }
+}
+
+// Cleanup memory system
+void CleanupMemory() {
+    if (g_Memory) {
+        delete g_Memory;
+        g_Memory = nullptr;
+    }
 } 

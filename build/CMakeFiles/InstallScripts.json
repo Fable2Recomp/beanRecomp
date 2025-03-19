@@ -1,8 +1,7 @@
 {
 	"InstallScripts" : 
 	[
-		"C:/Users/mattscreative/Documents/beanRecomp/build/cmake_install.cmake",
-		"C:/Users/mattscreative/Documents/beanRecomp/build/src/ppc/cmake_install.cmake"
+		"C:/Users/mattscreative/Documents/beanRecomp/build/cmake_install.cmake"
 	],
 	"Parallel" : false
 }

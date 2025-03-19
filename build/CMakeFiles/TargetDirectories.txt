@@ -1,7 +1,4 @@
 C:/Users/mattscreative/Documents/beanRecomp/build/CMakeFiles/BeanRecomp.dir
-C:/Users/mattscreative/Documents/beanRecomp/build/CMakeFiles/INSTALL.dir
+C:/Users/mattscreative/Documents/beanRecomp/build/CMakeFiles/beanrecomp_exe.dir
 C:/Users/mattscreative/Documents/beanRecomp/build/CMakeFiles/ALL_BUILD.dir
 C:/Users/mattscreative/Documents/beanRecomp/build/CMakeFiles/ZERO_CHECK.dir
-C:/Users/mattscreative/Documents/beanRecomp/build/src/ppc/CMakeFiles/ppc_recomp.dir
-C:/Users/mattscreative/Documents/beanRecomp/build/src/ppc/CMakeFiles/INSTALL.dir
-C:/Users/mattscreative/Documents/beanRecomp/build/src/ppc/CMakeFiles/ALL_BUILD.dir

@@ -1,13 +1,17 @@
 #pragma once
-#ifndef PPC_RECOMP_PATCH_H
-#define PPC_RECOMP_PATCH_H
+#ifndef PPC_RECOMP_PATCH_H_INCLUDED
+#define PPC_RECOMP_PATCH_H_INCLUDED
 
 // Include all necessary headers
 #include "../include/ppc/ppc_types.h"
 #include "../include/ppc/ppc_memory.h"
 #include "../include/ppc/ppc_context.h"
 #include "../include/ppc/ppc_register.h"
+#include "../include/ppc/ppc_memory_macros.h"
 #include <type_traits>
+#include <cstdint>
+#include <stdexcept>
+#include "ppc_recomp_macros.h"
 
 // Global memory instance
 extern PPCMemory g_Memory;
@@ -84,193 +88,206 @@ inline bool operator!(const PPCContext& ctx) {
     return false; // PPCContext is always valid
 }
 
-// Fix for the -> operator issue with PPCContext
-// This is a helper class that allows ctx->r1 to be converted to ctx.r1
-class PPCContextWrapper {
-public:
-    PPCContextWrapper(PPCContext& ctx) : m_ctx(ctx) {}
+// Smart pointer wrapper for context access
+template<typename T>
+class ContextWrapper {
+private:
+    T* ptr;
+    PPCContext* ctx;
     
-    PPCContext* operator->() {
-        return &m_ctx;
+public:
+    ContextWrapper(T* p, PPCContext* c) : ptr(p), ctx(c) {}
+    
+    T* operator->() {
+        if (!ptr || !ctx) {
+            throw std::runtime_error("Invalid context access");
+        }
+        return ptr;
     }
     
-private:
-    PPCContext& m_ctx;
+    T& operator*() {
+        if (!ptr || !ctx) {
+            throw std::runtime_error("Invalid context access");
+        }
+        return *ptr;
+    }
+    
+    operator bool() const {
+        return ptr != nullptr && ctx != nullptr;
+    }
 };
 
-// Helper function to create a wrapper for reference
-inline PPCContextWrapper ctx_arrow(PPCContext& ctx) {
-    return PPCContextWrapper(ctx);
-}
+// Context access helper
+#define ctx_arrow(ctx) ContextWrapper<PPCContext>(ctx, ctx)
 
-// Helper function to create a wrapper for pointer
-inline PPCContextWrapper ctx_arrow(PPCContext* ctx) {
-    return PPCContextWrapper(*ctx);
-}
+// Memory access safety checks
+#define PPC_CHECK_MEMORY_ACCESS(addr, size) \
+    do { \
+        if (!g_Memory || !g_Memory->is_valid_address(addr, size)) { \
+            throw std::runtime_error("Invalid memory access at address " + std::to_string(addr)); \
+        } \
+    } while(0)
 
-// Helper function to get a pointer from either a reference or a pointer
+// Base memory access functions
 template<typename T>
-inline PPCContext* get_context_ptr(T& ctx) {
-    if constexpr (std::is_pointer_v<T>) {
-        return ctx;
-    } else {
-        return &ctx;
-    }
-}
-
-// Memory access functions for both PPCContext& and PPCContext*
-template<typename T>
-inline uint32_t ReadMemory32(T& ctx, uint32_t addr) {
-    return g_Memory.ReadMemory32(get_context_ptr(ctx), addr);
+T ReadMemory8(PPCContext* ctx, uint32_t addr) {
+    PPC_CHECK_MEMORY_ACCESS(addr, sizeof(T));
+    return g_Memory->read<T>(addr);
 }
 
 template<typename T>
-inline uint64_t ReadMemory64(T& ctx, uint32_t addr) {
-    return g_Memory.ReadMemory64(get_context_ptr(ctx), addr);
+void WriteMemory8(PPCContext* ctx, uint32_t addr, T value) {
+    PPC_CHECK_MEMORY_ACCESS(addr, sizeof(T));
+    g_Memory->write<T>(addr, value);
 }
 
-template<typename T>
-inline uint8_t ReadMemory8(T& ctx, uint32_t addr) {
-    return g_Memory.ReadMemory8(get_context_ptr(ctx), addr);
-}
-
-template<typename T>
-inline uint16_t ReadMemory16(T& ctx, uint32_t addr) {
-    return g_Memory.ReadMemory16(get_context_ptr(ctx), addr);
-}
-
-template<typename T>
-inline void WriteMemory32(T& ctx, uint32_t addr, uint32_t value) {
-    g_Memory.WriteMemory32(get_context_ptr(ctx), addr, value);
-}
-
-template<typename T>
-inline void WriteMemory64(T& ctx, uint32_t addr, uint64_t value) {
-    g_Memory.WriteMemory64(get_context_ptr(ctx), addr, value);
-}
-
-template<typename T>
-inline void WriteMemory8(T& ctx, uint32_t addr, uint8_t value) {
-    g_Memory.WriteMemory8(get_context_ptr(ctx), addr, value);
-}
-
-template<typename T>
-inline void WriteMemory16(T& ctx, uint32_t addr, uint16_t value) {
-    g_Memory.WriteMemory16(get_context_ptr(ctx), addr, value);
-}
-
-// Special overloads for when the second argument is a PPCContext
-template<typename T>
-inline uint32_t ReadMemory32(T& ctx, PPCContext& base) {
-    return ReadMemory32(ctx, base.r3.u32);
-}
-
-template<typename T>
-inline uint64_t ReadMemory64(T& ctx, PPCContext& base) {
-    return ReadMemory64(ctx, base.r3.u32);
-}
-
-template<typename T>
-inline uint8_t ReadMemory8(T& ctx, PPCContext& base) {
-    return ReadMemory8(ctx, base.r3.u32);
-}
-
-template<typename T>
-inline uint16_t ReadMemory16(T& ctx, PPCContext& base) {
-    return ReadMemory16(ctx, base.r3.u32);
-}
-
-template<typename T>
-inline void WriteMemory32(T& ctx, PPCContext& base, uint32_t value) {
-    WriteMemory32(ctx, base.r3.u32, value);
-}
-
-template<typename T>
-inline void WriteMemory64(T& ctx, PPCContext& base, uint64_t value) {
-    WriteMemory64(ctx, base.r3.u32, value);
-}
-
-template<typename T>
-inline void WriteMemory8(T& ctx, PPCContext& base, uint8_t value) {
-    WriteMemory8(ctx, base.r3.u32, value);
-}
-
-template<typename T>
-inline void WriteMemory16(T& ctx, PPCContext& base, uint16_t value) {
-    WriteMemory16(ctx, base.r3.u32, value);
-}
-
-// Add compare methods to PPCRegister
-// These need to be template methods to handle different types
-template<typename T>
-inline bool PPCRegister::eq() const {
-    return (this->u32 & 0x2) != 0;
-}
-
-template<typename T>
-inline bool PPCRegister::lt() const {
-    return (this->u32 & 0x8) != 0;
-}
-
-template<typename T>
-inline bool PPCRegister::gt() const {
-    return (this->u32 & 0x4) != 0;
-}
-
-template<typename T>
-inline void PPCRegister::compare(T value1, T value2, int& xer) {
-    uint32_t& xer_u32 = reinterpret_cast<uint32_t&>(xer);
-    if (value1 < value2) {
-        this->u32 = 0x8; // Set LT bit
-    } else if (value1 > value2) {
-        this->u32 = 0x4; // Set GT bit
-    } else {
-        this->u32 = 0x2; // Set EQ bit
-    }
-}
-
-// Memory access macros for recompiled code
-#define PPC_LOAD_U32(ctx, addr) ReadMemory32(ctx, addr)
+// Primary memory access macros
+#define PPC_LOAD_U8(ctx, addr) ReadMemory8<uint8_t>(ctx, addr)
 #define PPC_LOAD_U16(ctx, addr) ReadMemory16(ctx, addr)
-#define PPC_LOAD_U8(ctx, addr) ReadMemory8(ctx, addr)
+#define PPC_LOAD_U32(ctx, addr) ReadMemory32(ctx, addr)
 #define PPC_LOAD_U64(ctx, addr) ReadMemory64(ctx, addr)
 
-#define PPC_STORE_U32(ctx, addr, val) WriteMemory32(ctx, addr, val)
+#define PPC_STORE_U8(ctx, addr, val) WriteMemory8<uint8_t>(ctx, addr, val)
 #define PPC_STORE_U16(ctx, addr, val) WriteMemory16(ctx, addr, val)
-#define PPC_STORE_U8(ctx, addr, val) WriteMemory8(ctx, addr, val)
+#define PPC_STORE_U32(ctx, addr, val) WriteMemory32(ctx, addr, val)
 #define PPC_STORE_U64(ctx, addr, val) WriteMemory64(ctx, addr, val)
 
-// Aliases for the memory access macros
-#define PPC_Read_U32 PPC_LOAD_U32
-#define PPC_Read_U16 PPC_LOAD_U16
-#define PPC_Read_U8 PPC_LOAD_U8
-#define PPC_Read_U64 PPC_LOAD_U64
+// Function-style macros for variadic argument handling
+#define PPC_LOAD_U8_FUNC(ctx_ptr, addr, ...) PPC_LOAD_U8(ctx_ptr, addr)
+#define PPC_LOAD_U16_FUNC(ctx_ptr, addr, ...) PPC_LOAD_U16(ctx_ptr, addr)
+#define PPC_LOAD_U32_FUNC(ctx_ptr, addr, ...) PPC_LOAD_U32(ctx_ptr, addr)
+#define PPC_LOAD_U64_FUNC(ctx_ptr, addr, ...) PPC_LOAD_U64(ctx_ptr, addr)
 
-#define PPC_Write_U32 PPC_STORE_U32
-#define PPC_Write_U16 PPC_STORE_U16
+#define PPC_STORE_U8_FUNC(ctx_ptr, addr, val, ...) PPC_STORE_U8(ctx_ptr, addr, val)
+#define PPC_STORE_U16_FUNC(ctx_ptr, addr, val, ...) PPC_STORE_U16(ctx_ptr, addr, val)
+#define PPC_STORE_U32_FUNC(ctx_ptr, addr, val, ...) PPC_STORE_U32(ctx_ptr, addr, val)
+#define PPC_STORE_U64_FUNC(ctx_ptr, addr, val, ...) PPC_STORE_U64(ctx_ptr, addr, val)
+
+// Legacy aliases for backward compatibility
+#define PPC_Read_U8 PPC_LOAD_U8
+#define PPC_Read_U16 PPC_LOAD_U16
+#define PPC_Read_U32 PPC_LOAD_U32
+#define PPC_Read_U64 PPC_LOAD_U64
 #define PPC_Write_U8 PPC_STORE_U8
+#define PPC_Write_U16 PPC_STORE_U16
+#define PPC_Write_U32 PPC_STORE_U32
 #define PPC_Write_U64 PPC_STORE_U64
 
-// Function-style macros for memory access with variadic arguments to handle extra parameters
-#define PPC_LOAD_U8_FUNC(ctx_ptr, addr, ...) ReadMemory8(ctx_ptr, addr)
-#define PPC_LOAD_U16_FUNC(ctx_ptr, addr, ...) ReadMemory16(ctx_ptr, addr)
-#define PPC_LOAD_U32_FUNC(ctx_ptr, addr, ...) ReadMemory32(ctx_ptr, addr)
-#define PPC_LOAD_U64_FUNC(ctx_ptr, addr, ...) ReadMemory64(ctx_ptr, addr)
+// Register access safety checks
+#define PPC_CHECK_REGISTER_ACCESS(reg) \
+    do { \
+        if (reg < 0 || reg >= 32) { \
+            throw std::out_of_range("Invalid register index: " + std::to_string(reg)); \
+        } \
+    } while(0)
 
-#define PPC_LOAD_S8_FUNC(ctx_ptr, addr, ...) ((int8_t)ReadMemory8(ctx_ptr, addr))
-#define PPC_LOAD_S16_FUNC(ctx_ptr, addr, ...) ((int16_t)ReadMemory16(ctx_ptr, addr))
-#define PPC_LOAD_S32_FUNC(ctx_ptr, addr, ...) ((int32_t)ReadMemory32(ctx_ptr, addr))
-#define PPC_LOAD_S64_FUNC(ctx_ptr, addr, ...) ((int64_t)ReadMemory64(ctx_ptr, addr))
+// Enhanced register access functions
+template<typename T>
+T GetRegisterValue(PPCContext* ctx, int reg) {
+    PPC_CHECK_REGISTER_ACCESS(reg);
+    return ctx->get_r(reg).as<T>();
+}
 
-#define PPC_STORE_U8_FUNC(ctx_ptr, addr, val, ...) WriteMemory8(ctx_ptr, addr, val)
-#define PPC_STORE_U16_FUNC(ctx_ptr, addr, val, ...) WriteMemory16(ctx_ptr, addr, val)
-#define PPC_STORE_U32_FUNC(ctx_ptr, addr, val, ...) WriteMemory32(ctx_ptr, addr, val)
-#define PPC_STORE_U64_FUNC(ctx_ptr, addr, val, ...) WriteMemory64(ctx_ptr, addr, val)
+template<typename T>
+void SetRegisterValue(PPCContext* ctx, int reg, T value) {
+    PPC_CHECK_REGISTER_ACCESS(reg);
+    ctx->get_r(reg) = PPCRegister(value);
+}
 
-#define PPC_STORE_S8_FUNC(ctx_ptr, addr, val, ...) WriteMemory8(ctx_ptr, addr, (uint8_t)(val))
-#define PPC_STORE_S16_FUNC(ctx_ptr, addr, val, ...) WriteMemory16(ctx_ptr, addr, (uint16_t)(val))
-#define PPC_STORE_S32_FUNC(ctx_ptr, addr, val, ...) WriteMemory32(ctx_ptr, addr, (uint32_t)(val))
-#define PPC_STORE_S64_FUNC(ctx_ptr, addr, val, ...) WriteMemory64(ctx_ptr, addr, (uint64_t)(val))
+// Condition register access
+bool GetCRBit(PPCContext* ctx, int bit) {
+    if (bit < 0 || bit >= 32) {
+        throw std::out_of_range("Invalid CR bit index: " + std::to_string(bit));
+    }
+    return (ctx->cr.value & (1 << bit)) != 0;
+}
+
+void SetCRBit(PPCContext* ctx, int bit, bool value) {
+    if (bit < 0 || bit >= 32) {
+        throw std::out_of_range("Invalid CR bit index: " + std::to_string(bit));
+    }
+    if (value) {
+        ctx->cr.value |= (1 << bit);
+    } else {
+        ctx->cr.value &= ~(1 << bit);
+    }
+}
+
+// XER register access
+bool GetXERBit(PPCContext* ctx, int bit) {
+    if (bit < 0 || bit >= 32) {
+        throw std::out_of_range("Invalid XER bit index: " + std::to_string(bit));
+    }
+    return (ctx->xer.value & (1 << bit)) != 0;
+}
+
+void SetXERBit(PPCContext* ctx, int bit, bool value) {
+    if (bit < 0 || bit >= 32) {
+        throw std::out_of_range("Invalid XER bit index: " + std::to_string(bit));
+    }
+    if (value) {
+        ctx->xer.value |= (1 << bit);
+    } else {
+        ctx->xer.value &= ~(1 << bit);
+    }
+}
+
+// FPSCR register access
+uint32_t GetFPSCRBit(PPCContext* ctx, int bit) {
+    if (bit < 0 || bit >= 32) {
+        throw std::out_of_range("Invalid FPSCR bit index: " + std::to_string(bit));
+    }
+    return (ctx->fpscr.u32 & (1 << bit)) != 0;
+}
+
+void SetFPSCRBit(PPCContext* ctx, int bit, bool value) {
+    if (bit < 0 || bit >= 32) {
+        throw std::out_of_range("Invalid FPSCR bit index: " + std::to_string(bit));
+    }
+    if (value) {
+        ctx->fpscr.u32 |= (1 << bit);
+    } else {
+        ctx->fpscr.u32 &= ~(1 << bit);
+    }
+}
+
+// Context validation
+bool ValidateContext(PPCContext* ctx) {
+    if (!ctx) {
+        throw std::runtime_error("Null context pointer");
+    }
+    return ctx->is_valid();
+}
+
+// Context state management
+void ResetContext(PPCContext* ctx) {
+    if (!ctx) {
+        throw std::runtime_error("Null context pointer");
+    }
+    ctx->reset();
+}
+
+void SaveContextState(PPCContext* ctx, uint8_t* buffer, size_t& size) {
+    if (!ctx) {
+        throw std::runtime_error("Null context pointer");
+    }
+    ctx->save_state(buffer, size);
+}
+
+void RestoreContextState(PPCContext* ctx, const uint8_t* buffer, size_t size) {
+    if (!ctx) {
+        throw std::runtime_error("Null context pointer");
+    }
+    ctx->restore_state(buffer, size);
+}
+
+// Debug helpers
+void DumpContextState(PPCContext* ctx) {
+    if (!ctx) {
+        throw std::runtime_error("Null context pointer");
+    }
+    ctx->dump_state();
+}
 
 // Define a macro for the compare function
 #define compare template compare
@@ -295,4 +312,4 @@ typedef int PPCCRRegister;
 #define PPC_WEAK_FUNC(name) void name(PPCContext* ctx, uint32_t base_addr)
 #define alias(name) 
 
-#endif // PPC_RECOMP_PATCH_H 
+#endif // PPC_RECOMP_PATCH_H_INCLUDED 

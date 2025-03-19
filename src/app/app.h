@@ -2,8 +2,10 @@
 
 #include <string>
 #include <vector>
+#include "os/config.h"
+#include "os/crash_handler.h"
 
-namespace XenonRecomp
+namespace BeanRecomp
 {
     struct AppConfig
     {
@@ -15,6 +17,7 @@ namespace XenonRecomp
         bool enableCrashHandler;
         std::string dataPath;
         std::string userDataPath;
+        std::string configFilePath;
     };
 
     class App
@@ -56,5 +59,8 @@ namespace XenonRecomp
         
         static bool InitializeSubsystems();
         static void ShutdownSubsystems();
+        static void LoadConfig();
+        static void SaveConfig();
+        static void HandleCrash(const char* message);
     };
 } 

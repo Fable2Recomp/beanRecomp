@@ -1,6 +1,7 @@
 #pragma once
 
-#include "ppc_types.h"
+#include "ppc_forward_decls.h"
+#include "ppc_register.h"
 
 // Note: Conversion operators have been removed from this file
 // They should be defined as member functions in the PPCRegister union itself
