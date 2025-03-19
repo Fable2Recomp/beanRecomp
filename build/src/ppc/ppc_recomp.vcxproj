@@ -1,0 +1,365 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="17.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <PreferredToolArchitecture>x64</PreferredToolArchitecture>
+  </PropertyGroup>
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="MinSizeRel|x64">
+      <Configuration>MinSizeRel</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="RelWithDebInfo|x64">
+      <Configuration>RelWithDebInfo</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{E03DDE2C-3BD8-3DF7-A375-E6A2F45A4DA5}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
+    <VcpkgEnabled>false</VcpkgEnabled>
+    <WindowsTargetPlatformVersion>10.0.26100.0</WindowsTargetPlatformVersion>
+    <Platform>x64</Platform>
+    <ProjectName>ppc_recomp</ProjectName>
+    <VCProjectUpgraderObjectName>NoUpgrade</VCProjectUpgraderObjectName>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v143</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v143</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v143</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v143</PlatformToolset>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets">
+    <Import Project="do_not_import_user.props" Condition="exists('do_not_import_user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <_ProjectFileVersion>10.0.20506.1</_ProjectFileVersion>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:\Users\mattscreative\Documents\beanRecomp\build\src\ppc\Debug\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">ppc_recomp.dir\Debug\</IntDir>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">ppc_recomp</TargetName>
+    <TargetExt Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">.lib</TargetExt>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:\Users\mattscreative\Documents\beanRecomp\build\src\ppc\Release\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">ppc_recomp.dir\Release\</IntDir>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">ppc_recomp</TargetName>
+    <TargetExt Condition="'$(Configuration)|$(Platform)'=='Release|x64'">.lib</TargetExt>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">C:\Users\mattscreative\Documents\beanRecomp\build\src\ppc\MinSizeRel\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">ppc_recomp.dir\MinSizeRel\</IntDir>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">ppc_recomp</TargetName>
+    <TargetExt Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">.lib</TargetExt>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">C:\Users\mattscreative\Documents\beanRecomp\build\src\ppc\RelWithDebInfo\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">ppc_recomp.dir\RelWithDebInfo\</IntDir>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">ppc_recomp</TargetName>
+    <TargetExt Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">.lib</TargetExt>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>C:\Users\mattscreative\Documents\beanRecomp\src;C:\Users\mattscreative\Documents\beanRecomp\src\include;C:\Users\mattscreative\Documents\beanRecomp\src\thirdparty\simde;C:\Users\mattscreative\Documents\beanRecomp\src\include\ppc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <DisableSpecificWarnings>4244;4267;4996;4146;4305;4311;4312</DisableSpecificWarnings>
+      <EnableEnhancedInstructionSet>AdvancedVectorExtensions</EnableEnhancedInstructionSet>
+      <ExceptionHandling>Sync</ExceptionHandling>
+      <InlineFunctionExpansion>Disabled</InlineFunctionExpansion>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+      <MinimalRebuild></MinimalRebuild>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <Optimization>Disabled</Optimization>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <SupportJustMyCode></SupportJustMyCode>
+      <UseFullPaths>false</UseFullPaths>
+      <WarningLevel>Level3</WarningLevel>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;_CRT_SECURE_NO_WARNINGS;NOMINMAX;WIN32_LEAN_AND_MEAN;_HAS_EXCEPTIONS=0;HAVE_MEMORY_H;HAVE_STDINT_H;HAVE_BUILTIN_ROTATELEFT;HAVE_BUILTIN_ROTATELEFT32;HAVE_BUILTIN_ROTATELEFT64;PPC_PLATFORM_WINDOWS;PPC_COMPILER_MSVC;CMAKE_INTDIR="Debug"</PreprocessorDefinitions>
+      <ObjectFileName>$(IntDir)</ObjectFileName>
+      <ScanSourceForModuleDependencies>false</ScanSourceForModuleDependencies>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_DEBUG;_WINDOWS;_CRT_SECURE_NO_WARNINGS;NOMINMAX;WIN32_LEAN_AND_MEAN;_HAS_EXCEPTIONS=0;HAVE_MEMORY_H;HAVE_STDINT_H;HAVE_BUILTIN_ROTATELEFT;HAVE_BUILTIN_ROTATELEFT32;HAVE_BUILTIN_ROTATELEFT64;PPC_PLATFORM_WINDOWS;PPC_COMPILER_MSVC;CMAKE_INTDIR=\"Debug\"</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>C:\Users\mattscreative\Documents\beanRecomp\src;C:\Users\mattscreative\Documents\beanRecomp\src\include;C:\Users\mattscreative\Documents\beanRecomp\src\thirdparty\simde;C:\Users\mattscreative\Documents\beanRecomp\src\include\ppc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <Midl>
+      <AdditionalIncludeDirectories>C:\Users\mattscreative\Documents\beanRecomp\src;C:\Users\mattscreative\Documents\beanRecomp\src\include;C:\Users\mattscreative\Documents\beanRecomp\src\thirdparty\simde;C:\Users\mattscreative\Documents\beanRecomp\src\include\ppc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
+      <HeaderFileName>%(Filename).h</HeaderFileName>
+      <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
+      <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
+      <ProxyFileName>%(Filename)_p.c</ProxyFileName>
+    </Midl>
+    <Lib>
+      <AdditionalOptions>%(AdditionalOptions) /machine:x64</AdditionalOptions>
+    </Lib>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>C:\Users\mattscreative\Documents\beanRecomp\src;C:\Users\mattscreative\Documents\beanRecomp\src\include;C:\Users\mattscreative\Documents\beanRecomp\src\thirdparty\simde;C:\Users\mattscreative\Documents\beanRecomp\src\include\ppc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
+      <BasicRuntimeChecks>Default</BasicRuntimeChecks>
+      <DisableSpecificWarnings>4244;4267;4996;4146;4305;4311;4312</DisableSpecificWarnings>
+      <EnableEnhancedInstructionSet>AdvancedVectorExtensions</EnableEnhancedInstructionSet>
+      <ExceptionHandling>Sync</ExceptionHandling>
+      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+      <MinimalRebuild></MinimalRebuild>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <Optimization>MaxSpeed</Optimization>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <SupportJustMyCode></SupportJustMyCode>
+      <UseFullPaths>false</UseFullPaths>
+      <WarningLevel>Level3</WarningLevel>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;_CRT_SECURE_NO_WARNINGS;NOMINMAX;WIN32_LEAN_AND_MEAN;_HAS_EXCEPTIONS=0;HAVE_MEMORY_H;HAVE_STDINT_H;HAVE_BUILTIN_ROTATELEFT;HAVE_BUILTIN_ROTATELEFT32;HAVE_BUILTIN_ROTATELEFT64;PPC_PLATFORM_WINDOWS;PPC_COMPILER_MSVC;CMAKE_INTDIR="Release"</PreprocessorDefinitions>
+      <ObjectFileName>$(IntDir)</ObjectFileName>
+      <DebugInformationFormat>
+      </DebugInformationFormat>
+      <ScanSourceForModuleDependencies>false</ScanSourceForModuleDependencies>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;_CRT_SECURE_NO_WARNINGS;NOMINMAX;WIN32_LEAN_AND_MEAN;_HAS_EXCEPTIONS=0;HAVE_MEMORY_H;HAVE_STDINT_H;HAVE_BUILTIN_ROTATELEFT;HAVE_BUILTIN_ROTATELEFT32;HAVE_BUILTIN_ROTATELEFT64;PPC_PLATFORM_WINDOWS;PPC_COMPILER_MSVC;CMAKE_INTDIR=\"Release\"</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>C:\Users\mattscreative\Documents\beanRecomp\src;C:\Users\mattscreative\Documents\beanRecomp\src\include;C:\Users\mattscreative\Documents\beanRecomp\src\thirdparty\simde;C:\Users\mattscreative\Documents\beanRecomp\src\include\ppc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <Midl>
+      <AdditionalIncludeDirectories>C:\Users\mattscreative\Documents\beanRecomp\src;C:\Users\mattscreative\Documents\beanRecomp\src\include;C:\Users\mattscreative\Documents\beanRecomp\src\thirdparty\simde;C:\Users\mattscreative\Documents\beanRecomp\src\include\ppc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
+      <HeaderFileName>%(Filename).h</HeaderFileName>
+      <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
+      <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
+      <ProxyFileName>%(Filename)_p.c</ProxyFileName>
+    </Midl>
+    <Lib>
+      <AdditionalOptions>%(AdditionalOptions) /machine:x64</AdditionalOptions>
+    </Lib>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>C:\Users\mattscreative\Documents\beanRecomp\src;C:\Users\mattscreative\Documents\beanRecomp\src\include;C:\Users\mattscreative\Documents\beanRecomp\src\thirdparty\simde;C:\Users\mattscreative\Documents\beanRecomp\src\include\ppc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
+      <BasicRuntimeChecks>Default</BasicRuntimeChecks>
+      <DisableSpecificWarnings>4244;4267;4996;4146;4305;4311;4312</DisableSpecificWarnings>
+      <EnableEnhancedInstructionSet>AdvancedVectorExtensions</EnableEnhancedInstructionSet>
+      <ExceptionHandling>Sync</ExceptionHandling>
+      <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+      <MinimalRebuild></MinimalRebuild>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <Optimization>MinSpace</Optimization>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <SupportJustMyCode></SupportJustMyCode>
+      <UseFullPaths>false</UseFullPaths>
+      <WarningLevel>Level3</WarningLevel>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;_CRT_SECURE_NO_WARNINGS;NOMINMAX;WIN32_LEAN_AND_MEAN;_HAS_EXCEPTIONS=0;HAVE_MEMORY_H;HAVE_STDINT_H;HAVE_BUILTIN_ROTATELEFT;HAVE_BUILTIN_ROTATELEFT32;HAVE_BUILTIN_ROTATELEFT64;PPC_PLATFORM_WINDOWS;PPC_COMPILER_MSVC;CMAKE_INTDIR="MinSizeRel"</PreprocessorDefinitions>
+      <ObjectFileName>$(IntDir)</ObjectFileName>
+      <DebugInformationFormat>
+      </DebugInformationFormat>
+      <ScanSourceForModuleDependencies>false</ScanSourceForModuleDependencies>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;_CRT_SECURE_NO_WARNINGS;NOMINMAX;WIN32_LEAN_AND_MEAN;_HAS_EXCEPTIONS=0;HAVE_MEMORY_H;HAVE_STDINT_H;HAVE_BUILTIN_ROTATELEFT;HAVE_BUILTIN_ROTATELEFT32;HAVE_BUILTIN_ROTATELEFT64;PPC_PLATFORM_WINDOWS;PPC_COMPILER_MSVC;CMAKE_INTDIR=\"MinSizeRel\"</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>C:\Users\mattscreative\Documents\beanRecomp\src;C:\Users\mattscreative\Documents\beanRecomp\src\include;C:\Users\mattscreative\Documents\beanRecomp\src\thirdparty\simde;C:\Users\mattscreative\Documents\beanRecomp\src\include\ppc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <Midl>
+      <AdditionalIncludeDirectories>C:\Users\mattscreative\Documents\beanRecomp\src;C:\Users\mattscreative\Documents\beanRecomp\src\include;C:\Users\mattscreative\Documents\beanRecomp\src\thirdparty\simde;C:\Users\mattscreative\Documents\beanRecomp\src\include\ppc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
+      <HeaderFileName>%(Filename).h</HeaderFileName>
+      <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
+      <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
+      <ProxyFileName>%(Filename)_p.c</ProxyFileName>
+    </Midl>
+    <Lib>
+      <AdditionalOptions>%(AdditionalOptions) /machine:x64</AdditionalOptions>
+    </Lib>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>C:\Users\mattscreative\Documents\beanRecomp\src;C:\Users\mattscreative\Documents\beanRecomp\src\include;C:\Users\mattscreative\Documents\beanRecomp\src\thirdparty\simde;C:\Users\mattscreative\Documents\beanRecomp\src\include\ppc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
+      <BasicRuntimeChecks>Default</BasicRuntimeChecks>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <DisableSpecificWarnings>4244;4267;4996;4146;4305;4311;4312</DisableSpecificWarnings>
+      <EnableEnhancedInstructionSet>AdvancedVectorExtensions</EnableEnhancedInstructionSet>
+      <ExceptionHandling>Sync</ExceptionHandling>
+      <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+      <MinimalRebuild></MinimalRebuild>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <Optimization>MaxSpeed</Optimization>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <SupportJustMyCode></SupportJustMyCode>
+      <UseFullPaths>false</UseFullPaths>
+      <WarningLevel>Level3</WarningLevel>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;_CRT_SECURE_NO_WARNINGS;NOMINMAX;WIN32_LEAN_AND_MEAN;_HAS_EXCEPTIONS=0;HAVE_MEMORY_H;HAVE_STDINT_H;HAVE_BUILTIN_ROTATELEFT;HAVE_BUILTIN_ROTATELEFT32;HAVE_BUILTIN_ROTATELEFT64;PPC_PLATFORM_WINDOWS;PPC_COMPILER_MSVC;CMAKE_INTDIR="RelWithDebInfo"</PreprocessorDefinitions>
+      <ObjectFileName>$(IntDir)</ObjectFileName>
+      <ScanSourceForModuleDependencies>false</ScanSourceForModuleDependencies>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;_CRT_SECURE_NO_WARNINGS;NOMINMAX;WIN32_LEAN_AND_MEAN;_HAS_EXCEPTIONS=0;HAVE_MEMORY_H;HAVE_STDINT_H;HAVE_BUILTIN_ROTATELEFT;HAVE_BUILTIN_ROTATELEFT32;HAVE_BUILTIN_ROTATELEFT64;PPC_PLATFORM_WINDOWS;PPC_COMPILER_MSVC;CMAKE_INTDIR=\"RelWithDebInfo\"</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>C:\Users\mattscreative\Documents\beanRecomp\src;C:\Users\mattscreative\Documents\beanRecomp\src\include;C:\Users\mattscreative\Documents\beanRecomp\src\thirdparty\simde;C:\Users\mattscreative\Documents\beanRecomp\src\include\ppc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <Midl>
+      <AdditionalIncludeDirectories>C:\Users\mattscreative\Documents\beanRecomp\src;C:\Users\mattscreative\Documents\beanRecomp\src\include;C:\Users\mattscreative\Documents\beanRecomp\src\thirdparty\simde;C:\Users\mattscreative\Documents\beanRecomp\src\include\ppc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
+      <HeaderFileName>%(Filename).h</HeaderFileName>
+      <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
+      <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
+      <ProxyFileName>%(Filename)_p.c</ProxyFileName>
+    </Midl>
+    <Lib>
+      <AdditionalOptions>%(AdditionalOptions) /machine:x64</AdditionalOptions>
+    </Lib>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <CustomBuild Include="C:\Users\mattscreative\Documents\beanRecomp\src\ppc\CMakeLists.txt">
+      <UseUtf8Encoding>Always</UseUtf8Encoding>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Building Custom Rule C:/Users/mattscreative/Documents/beanRecomp/src/ppc/CMakeLists.txt</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">setlocal
+"C:\Program Files\CMake\bin\cmake.exe" -SC:/Users/mattscreative/Documents/beanRecomp -BC:/Users/mattscreative/Documents/beanRecomp/build --check-stamp-file C:/Users/mattscreative/Documents/beanRecomp/build/src/ppc/CMakeFiles/generate.stamp
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:\Users\mattscreative\Documents\beanRecomp\build\src\ppc\CMakeFiles\generate.stamp</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</LinkObjects>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Building Custom Rule C:/Users/mattscreative/Documents/beanRecomp/src/ppc/CMakeLists.txt</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">setlocal
+"C:\Program Files\CMake\bin\cmake.exe" -SC:/Users/mattscreative/Documents/beanRecomp -BC:/Users/mattscreative/Documents/beanRecomp/build --check-stamp-file C:/Users/mattscreative/Documents/beanRecomp/build/src/ppc/CMakeFiles/generate.stamp
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:\Users\mattscreative\Documents\beanRecomp\build\src\ppc\CMakeFiles\generate.stamp</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</LinkObjects>
+      <Message Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">Building Custom Rule C:/Users/mattscreative/Documents/beanRecomp/src/ppc/CMakeLists.txt</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">setlocal
+"C:\Program Files\CMake\bin\cmake.exe" -SC:/Users/mattscreative/Documents/beanRecomp -BC:/Users/mattscreative/Documents/beanRecomp/build --check-stamp-file C:/Users/mattscreative/Documents/beanRecomp/build/src/ppc/CMakeFiles/generate.stamp
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">C:\Users\mattscreative\Documents\beanRecomp\build\src\ppc\CMakeFiles\generate.stamp</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">false</LinkObjects>
+      <Message Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">Building Custom Rule C:/Users/mattscreative/Documents/beanRecomp/src/ppc/CMakeLists.txt</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">setlocal
+"C:\Program Files\CMake\bin\cmake.exe" -SC:/Users/mattscreative/Documents/beanRecomp -BC:/Users/mattscreative/Documents/beanRecomp/build --check-stamp-file C:/Users/mattscreative/Documents/beanRecomp/build/src/ppc/CMakeFiles/generate.stamp
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">C:\Users\mattscreative\Documents\beanRecomp\build\src\ppc\CMakeFiles\generate.stamp</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">false</LinkObjects>
+    </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="C:\Users\mattscreative\Documents\beanRecomp\src\ppc\ppc_base.cpp" />
+    <ClCompile Include="C:\Users\mattscreative\Documents\beanRecomp\src\ppc\ppc_context.cpp" />
+    <ClCompile Include="C:\Users\mattscreative\Documents\beanRecomp\src\ppc\ppc_func_mapping.cpp" />
+    <ClCompile Include="C:\Users\mattscreative\Documents\beanRecomp\src\ppc\ppc_memory.cpp" />
+    <ClCompile Include="C:\Users\mattscreative\Documents\beanRecomp\src\ppc\ppc_recomp.0.cpp" />
+    <ClCompile Include="C:\Users\mattscreative\Documents\beanRecomp\src\ppc\ppc_recomp.1.cpp" />
+    <ClCompile Include="C:\Users\mattscreative\Documents\beanRecomp\src\ppc\ppc_recomp.10.cpp" />
+    <ClCompile Include="C:\Users\mattscreative\Documents\beanRecomp\src\ppc\ppc_recomp.11.cpp" />
+    <ClCompile Include="C:\Users\mattscreative\Documents\beanRecomp\src\ppc\ppc_recomp.12.cpp" />
+    <ClCompile Include="C:\Users\mattscreative\Documents\beanRecomp\src\ppc\ppc_recomp.13.cpp" />
+    <ClCompile Include="C:\Users\mattscreative\Documents\beanRecomp\src\ppc\ppc_recomp.14.cpp" />
+    <ClCompile Include="C:\Users\mattscreative\Documents\beanRecomp\src\ppc\ppc_recomp.15.cpp" />
+    <ClCompile Include="C:\Users\mattscreative\Documents\beanRecomp\src\ppc\ppc_recomp.16.cpp" />
+    <ClCompile Include="C:\Users\mattscreative\Documents\beanRecomp\src\ppc\ppc_recomp.17.cpp" />
+    <ClCompile Include="C:\Users\mattscreative\Documents\beanRecomp\src\ppc\ppc_recomp.18.cpp" />
+    <ClCompile Include="C:\Users\mattscreative\Documents\beanRecomp\src\ppc\ppc_recomp.19.cpp" />
+    <ClCompile Include="C:\Users\mattscreative\Documents\beanRecomp\src\ppc\ppc_recomp.2.cpp" />
+    <ClCompile Include="C:\Users\mattscreative\Documents\beanRecomp\src\ppc\ppc_recomp.20.cpp" />
+    <ClCompile Include="C:\Users\mattscreative\Documents\beanRecomp\src\ppc\ppc_recomp.21.cpp" />
+    <ClCompile Include="C:\Users\mattscreative\Documents\beanRecomp\src\ppc\ppc_recomp.22.cpp" />
+    <ClCompile Include="C:\Users\mattscreative\Documents\beanRecomp\src\ppc\ppc_recomp.23.cpp" />
+    <ClCompile Include="C:\Users\mattscreative\Documents\beanRecomp\src\ppc\ppc_recomp.24.cpp" />
+    <ClCompile Include="C:\Users\mattscreative\Documents\beanRecomp\src\ppc\ppc_recomp.25.cpp" />
+    <ClCompile Include="C:\Users\mattscreative\Documents\beanRecomp\src\ppc\ppc_recomp.26.cpp" />
+    <ClCompile Include="C:\Users\mattscreative\Documents\beanRecomp\src\ppc\ppc_recomp.27.cpp" />
+    <ClCompile Include="C:\Users\mattscreative\Documents\beanRecomp\src\ppc\ppc_recomp.28.cpp" />
+    <ClCompile Include="C:\Users\mattscreative\Documents\beanRecomp\src\ppc\ppc_recomp.29.cpp" />
+    <ClCompile Include="C:\Users\mattscreative\Documents\beanRecomp\src\ppc\ppc_recomp.3.cpp" />
+    <ClCompile Include="C:\Users\mattscreative\Documents\beanRecomp\src\ppc\ppc_recomp.30.cpp" />
+    <ClCompile Include="C:\Users\mattscreative\Documents\beanRecomp\src\ppc\ppc_recomp.31.cpp" />
+    <ClCompile Include="C:\Users\mattscreative\Documents\beanRecomp\src\ppc\ppc_recomp.32.cpp" />
+    <ClCompile Include="C:\Users\mattscreative\Documents\beanRecomp\src\ppc\ppc_recomp.33.cpp" />
+    <ClCompile Include="C:\Users\mattscreative\Documents\beanRecomp\src\ppc\ppc_recomp.34.cpp" />
+    <ClCompile Include="C:\Users\mattscreative\Documents\beanRecomp\src\ppc\ppc_recomp.35.cpp" />
+    <ClCompile Include="C:\Users\mattscreative\Documents\beanRecomp\src\ppc\ppc_recomp.36.cpp" />
+    <ClCompile Include="C:\Users\mattscreative\Documents\beanRecomp\src\ppc\ppc_recomp.37.cpp" />
+    <ClCompile Include="C:\Users\mattscreative\Documents\beanRecomp\src\ppc\ppc_recomp.38.cpp" />
+    <ClCompile Include="C:\Users\mattscreative\Documents\beanRecomp\src\ppc\ppc_recomp.39.cpp" />
+    <ClCompile Include="C:\Users\mattscreative\Documents\beanRecomp\src\ppc\ppc_recomp.4.cpp" />
+    <ClCompile Include="C:\Users\mattscreative\Documents\beanRecomp\src\ppc\ppc_recomp.40.cpp" />
+    <ClCompile Include="C:\Users\mattscreative\Documents\beanRecomp\src\ppc\ppc_recomp.41.cpp" />
+    <ClCompile Include="C:\Users\mattscreative\Documents\beanRecomp\src\ppc\ppc_recomp.42.cpp" />
+    <ClCompile Include="C:\Users\mattscreative\Documents\beanRecomp\src\ppc\ppc_recomp.43.cpp" />
+    <ClCompile Include="C:\Users\mattscreative\Documents\beanRecomp\src\ppc\ppc_recomp.44.cpp" />
+    <ClCompile Include="C:\Users\mattscreative\Documents\beanRecomp\src\ppc\ppc_recomp.45.cpp" />
+    <ClCompile Include="C:\Users\mattscreative\Documents\beanRecomp\src\ppc\ppc_recomp.5.cpp" />
+    <ClCompile Include="C:\Users\mattscreative\Documents\beanRecomp\src\ppc\ppc_recomp.6.cpp" />
+    <ClCompile Include="C:\Users\mattscreative\Documents\beanRecomp\src\ppc\ppc_recomp.7.cpp" />
+    <ClCompile Include="C:\Users\mattscreative\Documents\beanRecomp\src\ppc\ppc_recomp.8.cpp" />
+    <ClCompile Include="C:\Users\mattscreative\Documents\beanRecomp\src\ppc\ppc_recomp.9.cpp" />
+    <ClCompile Include="C:\Users\mattscreative\Documents\beanRecomp\src\ppc\ppc_recomp_example.cpp" />
+    <ClCompile Include="C:\Users\mattscreative\Documents\beanRecomp\src\ppc\ppc_recomp_test.cpp" />
+  </ItemGroup>
+  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="C:\Users\mattscreative\Documents\beanRecomp\build\ZERO_CHECK.vcxproj">
+      <Project>{BF6FAC1A-103C-3AC4-A940-408E413005D3}</Project>
+      <Name>ZERO_CHECK</Name>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>
