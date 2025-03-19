@@ -5,6 +5,7 @@
 #include <memory>
 #include <unordered_map>
 #include "../ppc/ppc.h"
+#include "x86_code.h"
 
 namespace BeanRecomp
 {
@@ -81,12 +82,25 @@ namespace Recompiler
         bool IsFunctionCall(const PPC::PPCInstruction& inst) const;
         bool IsFunctionReturn(const PPC::PPCInstruction& inst) const;
 
+        // New helper methods for instruction translation
+        bool TranslateExtendedOpcode(const PPC::PPCInstruction& inst);
+        X86Register GetRegister(uint32_t ppcReg);
+        void SetRegister(uint32_t ppcReg, X86Register x86Reg);
+        X86Register AllocateRegister();
+        void FreeRegister(X86Register reg);
+
     private:
         RecompilerConfig m_Config;
         std::vector<uint8_t> m_BinaryData;
         std::unordered_map<uint32_t, PPCFunction*> m_Functions;
         std::unordered_map<uint32_t, PPCBlock*> m_Blocks;
         bool m_Initialized;
+
+        // New members for code generation
+        X86CodeGenerator m_CodeGen;
+        X86Block* m_CurrentBlock;
+        PPCFunction* m_CurrentFunction;
+        std::unordered_map<uint32_t, X86Register> m_RegisterMap;
     };
 
 } // namespace Recompiler
